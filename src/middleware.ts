@@ -17,6 +17,8 @@ import { RouteVariants } from '@/utils/server/routeVariants';
 import { OAUTH_AUTHORIZED } from './const/auth';
 import { oidcEnv } from './envs/oidc';
 
+const ACCESS_CODE_COOKIE = 'lobe-access-code';
+
 // Create debug logger instances
 const logDefault = debug('lobe-middleware:default');
 const logNextAuth = debug('lobe-middleware:next-auth');
@@ -43,9 +45,11 @@ export const config = {
     '/profile(.*)',
     '/me',
     '/me(.*)',
+    '/docs',
 
     '/login(.*)',
     '/signup(.*)',
+    '/access-login',
     '/next-auth/(.*)',
     '/oauth(.*)',
     '/oidc(.*)',
@@ -63,6 +67,20 @@ const defaultMiddleware = (request: NextRequest) => {
   if (backendApiEndpoints.some((path) => url.pathname.startsWith(path))) {
     logDefault('Skipping API request: %s', url.pathname);
     return NextResponse.next();
+  }
+
+  // Check ACCESS_CODE authentication if enabled and not on login page or docs page
+  if (appEnv.ENABLE_AUTH_PROTECTION && appEnv.ACCESS_CODES.length > 0) {
+    const isAccessLoginPage = url.pathname.includes('/access-login');
+    const isDocsPage = url.pathname.includes('/docs');
+    const hasAccessCode = request.cookies.get(ACCESS_CODE_COOKIE);
+    
+    if (!isAccessLoginPage && !isDocsPage && !hasAccessCode) {
+      logDefault('No access code found, redirecting to login');
+      const loginUrl = new URL('/access-login', request.url);
+      loginUrl.searchParams.set('callbackUrl', request.url);
+      return Response.redirect(loginUrl);
+    }
   }
 
   // 1. Read user preferences from cookies
