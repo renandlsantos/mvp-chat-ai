@@ -9,7 +9,11 @@ class AssistantService {
   getAssistantList = async (): Promise<DiscoverAssistantItem[]> => {
     const locale = globalHelpers.getCurrentLanguage();
 
-    const data = await edgeClient.market.getAgentIndex.query({ locale });
+    // For now, use regular marketplace until admin system is properly configured
+    const data = await edgeClient.market.getAgentIndex.query({ 
+      locale,
+      adminOnly: false, // Temporarily disabled admin-only filtering
+    });
 
     return data.agents as unknown as DiscoverAssistantItem[];
   };

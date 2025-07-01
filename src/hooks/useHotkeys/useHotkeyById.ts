@@ -1,5 +1,5 @@
 import { uniq } from 'lodash-es';
-import { DependencyList } from 'react';
+import { DependencyList, useMemo } from 'react';
 import { type HotkeyCallback, type Options, useHotkeys } from 'react-hotkeys-hook';
 
 import { HOTKEYS_REGISTRATION } from '@/const/hotkeys';
@@ -17,7 +17,9 @@ export const useHotkeyById = (
   options?: OptionsOrDependencyArray,
   dependencies?: OptionsOrDependencyArray,
 ) => {
-  const hotkey = useUserStore(settingsSelectors.getHotkeyById(hotkeyId));
+  // Memoizar o seletor para evitar re-criações
+  const hotkeySelector = useMemo(() => settingsSelectors.getHotkeyById(hotkeyId), [hotkeyId]);
+  const hotkey = useUserStore(hotkeySelector);
   const mobile = useServerConfigStore((s) => s.isMobile);
 
   const _options: Options | undefined = !Array.isArray(options)
@@ -32,22 +34,37 @@ export const useHotkeyById = (
       ? dependencies
       : undefined;
 
-  const item = HOTKEYS_REGISTRATION.find((item) => item.id === hotkeyId);
+  const item = useMemo(() => HOTKEYS_REGISTRATION.find((item) => item.id === hotkeyId), [hotkeyId]);
 
-  const ref = useHotkeys(
-    hotkey,
-    (...props) => {
-      if (isDev) console.log('[Hotkey]', hotkeyId);
-      return callback(...props);
-    },
-    {
+  const hotkeyOptions = useMemo(() => {
+    // Evitar recriação desnecessária do objeto de opções
+    const enabled = !mobile && _options?.enabled !== false;
+    const itemScopes = item?.scopes || [];
+    const optionScopes = _options?.scopes || [];
+    const scopes = uniq([hotkeyId, ...itemScopes, ...optionScopes]);
+    
+    return {
       enableOnFormTags: true,
       preventDefault: true,
       ..._options,
-      enabled: !mobile && _options?.enabled,
-      scopes: uniq([hotkeyId, ...(item?.scopes || []), ...(_options?.scopes || [])]),
-    },
-    _deps,
+      enabled,
+      scopes,
+    };
+  }, [mobile, hotkeyId, item, _options]);
+
+  // Memoizar o callback para evitar re-renderizações
+  const memoizedCallback = useMemo(() => {
+    return (...props: Parameters<HotkeyCallback>) => {
+      if (isDev) console.log('[Hotkey]', hotkeyId);
+      return callback(...props);
+    };
+  }, [callback, hotkeyId]);
+
+  const ref = useHotkeys(
+    hotkey || '',
+    memoizedCallback,
+    hotkeyOptions,
+    _deps as any[],
   );
 
   return {

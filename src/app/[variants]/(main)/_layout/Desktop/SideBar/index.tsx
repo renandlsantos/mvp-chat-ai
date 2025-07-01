@@ -32,11 +32,7 @@ const Nav = memo(() => {
   return (
     !inZenMode && (
       <SideNav
-        avatar={
-          <div className={electronStylish.nodrag}>
-            <Avatar />
-          </div>
-        }
+        avatar={<Avatar />}
         bottomActions={
           <div className={electronStylish.nodrag}>
             <BottomActions />

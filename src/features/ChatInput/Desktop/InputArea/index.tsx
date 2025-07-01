@@ -1,7 +1,7 @@
 import { TextArea } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { TextAreaRef } from 'antd/es/input/TextArea';
-import { RefObject, memo, useEffect, useRef } from 'react';
+import { RefObject, memo, useCallback, useEffect, useRef } from 'react';
 import { useHotkeysContext } from 'react-hotkeys-hook';
 import { useTranslation } from 'react-i18next';
 
@@ -68,53 +68,66 @@ const InputArea = memo<InputAreaProps>(({ onSend, value, loading, onChange }) =>
     };
   }, [hasValue]);
 
+  // Memoizar callbacks para evitar re-renderizações
+  const handleBlur = useCallback((e: React.FocusEvent<HTMLTextAreaElement>) => {
+    onChange?.(e.target.value);
+    disableScope(HotkeyEnum.AddUserMessage);
+  }, [onChange, disableScope]);
+
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    onChange?.(e.target.value);
+  }, [onChange]);
+
+  const handleFocus = useCallback(() => {
+    enableScope(HotkeyEnum.AddUserMessage);
+  }, [enableScope]);
+
+  const handleCompositionEnd = useCallback(() => {
+    isChineseInput.current = false;
+  }, []);
+
+  const handleCompositionStart = useCallback(() => {
+    isChineseInput.current = true;
+  }, []);
+
+  const handlePressEnter = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (loading || e.altKey || e.shiftKey || isChineseInput.current) return;
+
+    // eslint-disable-next-line unicorn/consistent-function-scoping
+    const send = () => {
+      // avoid inserting newline when sending message.
+      // refs: https://github.com/lobehub/lobe-chat/pull/989
+      e.preventDefault();
+
+      onSend();
+    };
+    const commandKey = isCommandPressed(e);
+
+    // when user like cmd + enter to send message
+    if (useCmdEnterToSend) {
+      if (commandKey) send();
+    } else {
+      // cmd + enter to wrap
+      if (commandKey) {
+        onChange?.((e.target as any).value + '\n');
+        return;
+      }
+
+      send();
+    }
+  }, [loading, useCmdEnterToSend, onSend, onChange]);
+
   return (
     <div className={styles.textareaContainer}>
       <TextArea
         autoFocus
         className={styles.textarea}
-        onBlur={(e) => {
-          onChange?.(e.target.value);
-          disableScope(HotkeyEnum.AddUserMessage);
-        }}
-        onChange={(e) => {
-          onChange?.(e.target.value);
-        }}
-        onCompositionEnd={() => {
-          isChineseInput.current = false;
-        }}
-        onCompositionStart={() => {
-          isChineseInput.current = true;
-        }}
-        onFocus={() => {
-          enableScope(HotkeyEnum.AddUserMessage);
-        }}
-        onPressEnter={(e) => {
-          if (loading || e.altKey || e.shiftKey || isChineseInput.current) return;
-
-          // eslint-disable-next-line unicorn/consistent-function-scoping
-          const send = () => {
-            // avoid inserting newline when sending message.
-            // refs: https://github.com/lobehub/lobe-chat/pull/989
-            e.preventDefault();
-
-            onSend();
-          };
-          const commandKey = isCommandPressed(e);
-
-          // when user like cmd + enter to send message
-          if (useCmdEnterToSend) {
-            if (commandKey) send();
-          } else {
-            // cmd + enter to wrap
-            if (commandKey) {
-              onChange?.((e.target as any).value + '\n');
-              return;
-            }
-
-            send();
-          }
-        }}
+        onBlur={handleBlur}
+        onChange={handleChange}
+        onCompositionEnd={handleCompositionEnd}
+        onCompositionStart={handleCompositionStart}
+        onFocus={handleFocus}
+        onPressEnter={handlePressEnter}
         placeholder={t('sendPlaceholder')}
         ref={ref}
         value={value}

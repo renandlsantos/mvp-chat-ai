@@ -69,13 +69,14 @@ const defaultMiddleware = (request: NextRequest) => {
     return NextResponse.next();
   }
 
-  // Check ACCESS_CODE authentication if enabled and not on login page or docs page
+  // Check ACCESS_CODE authentication if enabled and not on login page, docs page, or discover page
   if (appEnv.ENABLE_AUTH_PROTECTION && appEnv.ACCESS_CODES.length > 0) {
     const isAccessLoginPage = url.pathname.includes('/access-login');
     const isDocsPage = url.pathname.includes('/docs');
+    const isDiscoverPage = url.pathname.includes('/discover');
     const hasAccessCode = request.cookies.get(ACCESS_CODE_COOKIE);
     
-    if (!isAccessLoginPage && !isDocsPage && !hasAccessCode) {
+    if (!isAccessLoginPage && !isDocsPage && !isDiscoverPage && !hasAccessCode) {
       logDefault('No access code found, redirecting to login');
       const loginUrl = new URL('/access-login', request.url);
       loginUrl.searchParams.set('callbackUrl', request.url);

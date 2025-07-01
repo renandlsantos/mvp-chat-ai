@@ -40,8 +40,24 @@ const isDalleAutoGenerating = (s: UserStore) => currentSettings(s).tool?.dalle?.
 const currentSystemAgent = (s: UserStore) =>
   merge(DEFAULT_SYSTEM_AGENT_CONFIG, currentSettings(s).systemAgent);
 
-const getHotkeyById = (id: HotkeyId) => (s: UserStore) =>
-  merge(DEFAULT_HOTKEY_CONFIG, currentSettings(s).hotkey)[id];
+// Criar um cache para os seletores de hotkey
+const hotkeySelectorsCache = new Map<HotkeyId, (s: UserStore) => string>();
+
+const getHotkeyById = (id: HotkeyId) => {
+  // Retornar o seletor do cache se já existir
+  if (hotkeySelectorsCache.has(id)) {
+    return hotkeySelectorsCache.get(id)!;
+  }
+  
+  // Criar um novo seletor e armazenar no cache
+  const selector = (s: UserStore) => {
+    const hotkeyConfig = merge(DEFAULT_HOTKEY_CONFIG, currentSettings(s).hotkey);
+    return hotkeyConfig[id];
+  };
+  
+  hotkeySelectorsCache.set(id, selector);
+  return selector;
+};
 
 export const settingsSelectors = {
   currentSettings,

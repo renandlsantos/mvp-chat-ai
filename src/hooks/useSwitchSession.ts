@@ -27,6 +27,6 @@ export const useSwitchSession = () => {
         }, 50);
       }
     },
-    [mobile],
+    [switchSession, togglePortal, mobile, pathname, router],
   );
 };

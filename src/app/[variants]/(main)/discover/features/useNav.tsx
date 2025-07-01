@@ -1,4 +1,3 @@
-import { Icon } from '@lobehub/ui';
 import { Bot, Brain, BrainCircuit, House, Puzzle } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { ReactNode, useMemo } from 'react';
@@ -6,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import urlJoin from 'url-join';
 
 import type { MenuProps } from '@/components/Menu';
+import SafeIcon from '@/components/SafeIcon';
 import { useDiscoverTab } from '@/hooks/useDiscoverTab';
 import { DiscoverTab } from '@/types/discover';
 
@@ -30,27 +30,27 @@ export const useNav = () => {
   const items: MenuProps['items'] = useMemo(
     () => [
       {
-        icon: <Icon icon={House} size={ICON_SIZE} />,
+        icon: <SafeIcon icon={House} size={ICON_SIZE} />,
         key: DiscoverTab.Home,
         label: t('tab.home'),
       },
       {
-        icon: <Icon icon={Bot} size={ICON_SIZE} />,
+        icon: <SafeIcon icon={Bot} size={ICON_SIZE} />,
         key: DiscoverTab.Assistants,
         label: t('tab.assistants'),
       },
       {
-        icon: <Icon icon={Puzzle} size={ICON_SIZE} />,
+        icon: <SafeIcon icon={Puzzle} size={ICON_SIZE} />,
         key: DiscoverTab.Plugins,
         label: t('tab.plugins'),
       },
       {
-        icon: <Icon icon={Brain} size={ICON_SIZE} />,
+        icon: <SafeIcon icon={Brain} size={ICON_SIZE} />,
         key: DiscoverTab.Models,
         label: t('tab.models'),
       },
       {
-        icon: <Icon icon={BrainCircuit} size={ICON_SIZE} />,
+        icon: <SafeIcon icon={BrainCircuit} size={ICON_SIZE} />,
         key: DiscoverTab.Providers,
         label: t('tab.providers'),
       },

@@ -138,6 +138,11 @@
   "copy": "Copiar",
   "copyFail": "Falha ao copiar",
   "copySuccess": "Cópia bem-sucedida",
+  "credits": {
+    "tooltip": "Créditos restantes: {{credits}}",
+    "upgrade": "Fazer upgrade",
+    "insufficientCredits": "Créditos insuficientes"
+  },
   "dataStatistics": {
     "messages": "Mensagens",
     "sessions": "Sessões",

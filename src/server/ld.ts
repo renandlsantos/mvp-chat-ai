@@ -86,7 +86,7 @@ export class Ld {
     return {
       '@id': this.getId(OFFICIAL_URL, '#organization'),
       '@type': 'Organization',
-      'alternateName': 'LobeChat',
+      'alternateName': 'AI Hub',
       'contactPoint': {
         '@type': 'ContactPoint',
         'contactType': 'customer support',
@@ -254,7 +254,7 @@ export class Ld {
         '@id': this.getId(fixedUrl, '#primaryimage'),
       },
       'inLanguage': locale,
-      'keywords': tags?.join(' ') || 'LobeHub LobeChat',
+      'keywords': tags?.join(' ') || 'LobeHub AI Hub',
       'mainEntityOfPage': fixedUrl,
       'name': title,
       'publisher': {

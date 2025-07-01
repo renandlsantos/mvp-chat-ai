@@ -148,6 +148,7 @@ export const generateAIChat: StateCreator<
     const { internal_coreProcessMessage, activeTopicId, activeId, activeThreadId } = get();
     if (!activeId) return;
 
+
     const fileIdList = files?.map((f) => f.id);
 
     const hasFile = !!fileIdList && fileIdList.length > 0;
@@ -632,13 +633,14 @@ export const generateAIChat: StateCreator<
           isFunctionCall = true;
         }
 
+
         // update the content after fetch result
         await internal_updateMessageContent(messageId, content, {
           toolCalls: parsedToolCalls,
           reasoning: !!reasoning ? { ...reasoning, duration } : undefined,
           search: !!grounding?.citations ? grounding : undefined,
           imageList: finalImages.length > 0 ? finalImages : undefined,
-          metadata: speed ? { ...usage, ...speed } : usage,
+          metadata: speed ? { ...usage, ...speed } : { ...usage },
         });
       },
       onMessageHandle: async (chunk) => {

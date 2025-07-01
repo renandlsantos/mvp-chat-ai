@@ -3,6 +3,7 @@ import { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
+import { getEnabledProviders } from '@/config/modelProviders/env';
 import { isDeprecatedEdition, isDesktop, isUsePgliteDB } from '@/const/version';
 import { useClientDataSWR } from '@/libs/swr';
 import { aiProviderService } from '@/services/aiProvider';
@@ -177,7 +178,7 @@ export const createAiProviderSlice: StateCreator<
         const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
         return {
           enabledAiModels: LOBE_DEFAULT_MODEL_LIST.filter((m) => m.enabled),
-          enabledAiProviders: DEFAULT_MODEL_PROVIDER_LIST.filter(
+          enabledAiProviders: getEnabledProviders().filter(
             (provider) => provider.enabled,
           ).map((item) => ({ id: item.id, name: item.name, source: 'builtin' })),
           runtimeConfig: {},

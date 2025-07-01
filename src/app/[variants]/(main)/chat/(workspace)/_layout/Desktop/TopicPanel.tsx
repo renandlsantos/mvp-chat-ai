@@ -1,10 +1,11 @@
 'use client';
 
-import { DraggablePanel, DraggablePanelContainer } from '@lobehub/ui';
+import { DraggablePanelContainer } from '@lobehub/ui';
 import { createStyles, useResponsive } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { PropsWithChildren, memo, useEffect, useState } from 'react';
 
+import DraggablePanelWrapper from '@/components/DraggablePanelContainer';
 import { CHAT_SIDEBAR_WIDTH } from '@/const/layoutTokens';
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/slices/portal/selectors';
@@ -49,7 +50,7 @@ const TopicPanel = memo(({ children }: PropsWithChildren) => {
   }, [lg, cacheExpand]);
 
   return (
-    <DraggablePanel
+    <DraggablePanelWrapper
       className={styles.drawer}
       classNames={{
         content: styles.content,
@@ -71,7 +72,7 @@ const TopicPanel = memo(({ children }: PropsWithChildren) => {
       >
         {children}
       </DraggablePanelContainer>
-    </DraggablePanel>
+    </DraggablePanelWrapper>
   );
 });
 

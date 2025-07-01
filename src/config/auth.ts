@@ -40,6 +40,10 @@ declare global {
       ZITADEL_CLIENT_ID?: string;
       ZITADEL_CLIENT_SECRET?: string;
       ZITADEL_ISSUER?: string;
+
+      // Credentials
+      AUTH_CREDENTIALS_USERNAME?: string;
+      AUTH_CREDENTIALS_PASSWORD?: string;
     }
   }
 }
@@ -207,6 +211,10 @@ export const getAuthConfig = () => {
 
       // Casdoor
       CASDOOR_WEBHOOK_SECRET: z.string().optional(),
+
+      // Credentials
+      AUTH_CREDENTIALS_USERNAME: z.string().optional(),
+      AUTH_CREDENTIALS_PASSWORD: z.string().optional(),
     },
 
     runtimeEnv: {
@@ -269,6 +277,10 @@ export const getAuthConfig = () => {
 
       // Casdoor
       CASDOOR_WEBHOOK_SECRET: process.env.CASDOOR_WEBHOOK_SECRET,
+
+      // Credentials
+      AUTH_CREDENTIALS_USERNAME: process.env.AUTH_CREDENTIALS_USERNAME,
+      AUTH_CREDENTIALS_PASSWORD: process.env.AUTH_CREDENTIALS_PASSWORD,
     },
   });
 };

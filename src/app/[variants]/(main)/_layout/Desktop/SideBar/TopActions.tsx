@@ -1,7 +1,7 @@
 import { ActionIcon, ActionIconProps } from '@lobehub/ui';
 import { Compass, FolderClosed, MessageSquare } from 'lucide-react';
 import Link from 'next/link';
-import { memo } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -25,15 +25,25 @@ const TopActions = memo<TopActionProps>(({ tab, isPinned }) => {
   const { t } = useTranslation('common');
   const switchBackToChat = useGlobalStore((s) => s.switchBackToChat);
   const { showMarket, enableKnowledgeBase } = useServerConfigStore(featureFlagsSelectors);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const isChatActive = tab === SidebarTabKey.Chat && !isPinned;
   const isFilesActive = tab === SidebarTabKey.Files;
   const isDiscoverActive = tab === SidebarTabKey.Discover;
 
+  // Use English labels until component is mounted to avoid hydration errors
+  const chatLabel = mounted ? t('tab.chat') : 'Chat';
+  const filesLabel = mounted ? t('tab.files') : 'Files';
+  const discoverLabel = mounted ? t('tab.discover') : 'Discover';
+
   return (
     <Flexbox gap={8}>
       <Link
-        aria-label={t('tab.chat')}
+        aria-label={chatLabel}
         href={'/chat'}
         onClick={(e) => {
           // If Cmd key is pressed, let the default link behavior happen (open in new tab)
@@ -50,28 +60,28 @@ const TopActions = memo<TopActionProps>(({ tab, isPinned }) => {
           active={isChatActive}
           icon={MessageSquare}
           size={ICON_SIZE}
-          title={t('tab.chat')}
+          title={chatLabel}
           tooltipProps={{ placement: 'right' }}
         />
       </Link>
       {enableKnowledgeBase && (
-        <Link aria-label={t('tab.files')} href={'/files'}>
+        <Link aria-label={filesLabel} href={'/files'}>
           <ActionIcon
             active={isFilesActive}
             icon={FolderClosed}
             size={ICON_SIZE}
-            title={t('tab.files')}
+            title={filesLabel}
             tooltipProps={{ placement: 'right' }}
           />
         </Link>
       )}
       {showMarket && (
-        <Link aria-label={t('tab.discover')} href={'/discover'}>
+        <Link aria-label={discoverLabel} href={'/discover'}>
           <ActionIcon
             active={isDiscoverActive}
             icon={Compass}
             size={ICON_SIZE}
-            title={t('tab.discover')}
+            title={discoverLabel}
             tooltipProps={{ placement: 'right' }}
           />
         </Link>
