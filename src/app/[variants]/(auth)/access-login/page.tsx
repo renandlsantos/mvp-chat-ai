@@ -3,7 +3,7 @@
 import { Button } from '@lobehub/ui';
 import { Input } from 'antd';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Suspense, useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
@@ -33,14 +33,12 @@ const AccessLoginContent = () => {
     try {
       // Verify the access code via API
       const response = await fetch('/api/auth/access-code', {
-        method: 'POST',
+        body: JSON.stringify({ code: inputValue }),
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ code: inputValue }),
+        method: 'POST',
       });
-
-      const data = await response.json();
 
       if (!response.ok) {
         setError(t('response.InvalidAccessCode'));
@@ -52,7 +50,9 @@ const AccessLoginContent = () => {
       await updateKeyVaults({ password: inputValue });
       
       // Small delay to ensure cookie is set
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise<void>(resolve => {
+        setTimeout(resolve, 100);
+      });
       
       // Redirect to callback URL or main chat page
       const callbackUrl = searchParams.get('callbackUrl') || '/chat';
@@ -103,12 +103,12 @@ const AccessLoginContent = () => {
         </Flexbox>
 
         {mounted && (
-          <form onSubmit={handleSubmit} autoComplete="off">
+          <form autoComplete="off" onSubmit={handleSubmit}>
             <Flexbox gap={16}>
               <Input.Password
                 autoComplete="off"
-                data-lpignore="true"
                 data-form-type="other"
+                data-lpignore="true"
                 onChange={(e) => setInputValue(e.target.value)}
                 placeholder={t('unlock.password.placeholder')}
                 size={'large'}

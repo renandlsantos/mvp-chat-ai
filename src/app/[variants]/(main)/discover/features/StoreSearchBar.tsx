@@ -4,7 +4,7 @@ import { SearchBarProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { usePathname } from 'next/navigation';
 import { useQueryState } from 'nuqs';
-import { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import urlJoin from 'url-join';
 

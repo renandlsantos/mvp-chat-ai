@@ -1,19 +1,19 @@
-import { and, desc, eq, sql } from 'drizzle-orm';
+import { desc, eq } from 'drizzle-orm';
 import { nanoid } from 'nanoid';
 
 import { LobeChatDatabase } from '@/database/type';
 
-import { NewCreditTransaction, NewUserCredits, creditTransactions, userCredits, userPlans } from '../schemas/userCredits';
+import { NewCreditTransaction, NewUserCredits, creditTransactions, userCredits } from '../schemas/userCredits';
 
-export interface UserCreditsModel {
+export interface IUserCreditsModel {
+  addCredits: (userId: string, amount: number, details: Omit<NewCreditTransaction, 'id' | 'userId' | 'amount' | 'balance'>) => Promise<void>;
+  checkAndCreateUserCredits: (userId: string, planId?: string) => Promise<UserCredits>;
   create: (params: NewUserCredits) => Promise<UserCredits>;
+  deductCredits: (userId: string, amount: number, details: Omit<NewCreditTransaction, 'id' | 'userId' | 'amount' | 'balance'>) => Promise<boolean>;
   delete: (userId: string) => Promise<void>;
   findByUserId: (userId: string) => Promise<UserCredits | null>;
-  deductCredits: (userId: string, amount: number, details: Omit<NewCreditTransaction, 'id' | 'userId' | 'amount' | 'balance'>) => Promise<boolean>;
-  addCredits: (userId: string, amount: number, details: Omit<NewCreditTransaction, 'id' | 'userId' | 'amount' | 'balance'>) => Promise<void>;
   getTransactionHistory: (userId: string, limit?: number) => Promise<CreditTransaction[]>;
   resetMonthlyCredits: (userId: string) => Promise<void>;
-  checkAndCreateUserCredits: (userId: string, planId?: string) => Promise<UserCredits>;
 }
 
 export type UserCredits = typeof userCredits.$inferSelect;
@@ -59,11 +59,11 @@ export class UserCreditsModel {
       const defaultCredits = 100;
 
       userCredit = await this.create({
-        userId,
+        planId: planId || null,
+        resetAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
         totalCredits: defaultCredits,
         usedCredits: 0,
-        planId: planId || null,
-        resetAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // Next month
+        userId, // Next month
       });
     }
 
@@ -92,18 +92,20 @@ export class UserCreditsModel {
     await this.db
       .update(userCredits)
       .set({
-        usedCredits: newUsed,
         updatedAt: new Date(),
+        usedCredits: newUsed,
       })
       .where(eq(userCredits.userId, userId));
 
     // Record transaction
     await this.db.insert(creditTransactions).values({
-      id: nanoid(),
-      userId,
-      amount: -amount, // Negative for deduction
-      balance: newBalance,
+      amount: -amount,
+      // Negative for deduction
+balance: newBalance,
+      
+id: nanoid(), 
       type: 'usage',
+      userId,
       ...details,
     });
 
@@ -134,10 +136,10 @@ export class UserCreditsModel {
 
     // Record transaction
     await this.db.insert(creditTransactions).values({
-      id: nanoid(),
-      userId,
       amount: amount,
       balance: newBalance,
+      id: nanoid(),
+      userId,
       ...details,
     });
   };
@@ -163,21 +165,21 @@ export class UserCreditsModel {
     await this.db
       .update(userCredits)
       .set({
-        usedCredits: 0,
-        totalCredits: monthlyLimit,
         resetAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        totalCredits: monthlyLimit,
         updatedAt: new Date(),
+        usedCredits: 0,
       })
       .where(eq(userCredits.userId, userId));
 
     // Record reset transaction
     await this.db.insert(creditTransactions).values({
-      id: nanoid(),
-      userId,
       amount: monthlyLimit,
       balance: monthlyLimit,
-      type: 'refill',
       description: 'Monthly credit reset',
+      id: nanoid(),
+      type: 'refill',
+      userId,
     });
   };
 }

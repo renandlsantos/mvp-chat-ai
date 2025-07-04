@@ -8,7 +8,7 @@ console.log('📊 Node version:', process.version);
 console.log('💾 Memory:', Math.round(require('os').totalmem() / 1024 / 1024), 'MB');
 
 // Set environment
-process.env.NODE_OPTIONS = '--max-old-space-size=8192';
+process.env.NODE_OPTIONS = '--max-old-space-size=32768';
 process.env.NEXT_TELEMETRY_DISABLED = '1';
 process.env.DISABLE_SENTRY = 'true';
 process.env.SKIP_ENV_VALIDATION = 'true';

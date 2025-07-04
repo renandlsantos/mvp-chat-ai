@@ -10,7 +10,7 @@ console.log('💾 Total Memory:', Math.round(require('os').totalmem() / 1024 / 1
 console.log('💾 Free Memory:', Math.round(require('os').freemem() / 1024 / 1024), 'MB');
 
 // Set optimized environment variables
-process.env.NODE_OPTIONS = '--max-old-space-size=8192';
+process.env.NODE_OPTIONS = '--max-old-space-size=32768';
 process.env.NEXT_TELEMETRY_DISABLED = '1';
 process.env.DISABLE_SENTRY = 'true';
 process.env.ANALYZE = 'false';
@@ -108,7 +108,7 @@ try {
   
   // Try alternative build with even more memory
   console.log('🔄 Trying alternative build with more memory...');
-  process.env.NODE_OPTIONS = '--max-old-space-size=12288';
+  process.env.NODE_OPTIONS = '--max-old-space-size=40960';
   
   try {
     execSync('next build', { stdio: 'inherit' });
