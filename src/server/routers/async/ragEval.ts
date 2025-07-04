@@ -87,8 +87,14 @@ export const ragEvalRouter = router({
 
           const embeddingItem = await ctx.embeddingModel.findById(questionEmbeddingId);
 
+          // Ensure embeddings is a valid array
+          const embeddings = embeddingItem?.embeddings;
+          if (!embeddings || !Array.isArray(embeddings) || embeddings.length === 0) {
+            throw new Error('Invalid or missing embeddings for question');
+          }
+
           const chunks = await ctx.chunkModel.semanticSearchForChat({
-            embedding: embeddingItem!.embeddings!,
+            embedding: embeddings as number[],
             fileIds: datasetRecord!.referenceFiles!,
             query: evalRecord.question,
           });

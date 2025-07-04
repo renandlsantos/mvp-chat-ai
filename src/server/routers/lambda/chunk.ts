@@ -119,8 +119,12 @@ export const chunkRouter = router({
       });
       console.timeEnd('embedding');
 
+      if (!embeddings || !Array.isArray(embeddings) || embeddings.length === 0) {
+        throw new Error('Failed to generate embeddings for query');
+      }
+
       return ctx.chunkModel.semanticSearch({
-        embedding: embeddings![0],
+        embedding: embeddings[0],
         fileIds: input.fileIds,
         query: input.query,
       });
@@ -153,7 +157,11 @@ export const chunkRouter = router({
             model,
           });
 
-          embedding = embeddings![0];
+          if (!embeddings || !Array.isArray(embeddings) || embeddings.length === 0) {
+            throw new Error('Failed to generate embeddings for rewritten query');
+          }
+
+          embedding = embeddings[0];
           const embeddingsId = await ctx.embeddingModel.create({
             embeddings: embedding,
             model,
@@ -168,7 +176,11 @@ export const chunkRouter = router({
 
           ragQueryId = result.id;
         } else {
-          embedding = item.embeddings;
+          // Ensure embeddings is a valid array
+          if (!item.embeddings || !Array.isArray(item.embeddings) || item.embeddings.length === 0) {
+            throw new Error('Invalid or missing embeddings for message query');
+          }
+          embedding = item.embeddings as number[];
           ragQueryId = item.id;
         }
 
