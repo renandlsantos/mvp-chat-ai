@@ -14,10 +14,11 @@ pnpm run build:railway
 Este comando:
 - Usa configuração otimizada (`next.config.railway.ts`)
 - Define limite de memória para 8GB
+- Mantém plugins essenciais do webpack
 - Desabilita otimizações que consomem memória
 
 ### 2. Build Seguro (Alternativa)
-Se o build padrão falhar, use:
+Se o build padrão falhar com erro de memória, use:
 ```bash
 pnpm run build:railway-safe
 ```
@@ -27,7 +28,18 @@ Este comando:
 - Usa modo de compilação experimental
 - Cria BUILD_ID manualmente
 
-### 3. Configurações no Railway
+### 3. Build Mínimo (Emergência)
+Se ambos falharem, use o build mínimo:
+```bash
+pnpm run build:railway-minimal
+```
+
+Este comando:
+- Cria configuração temporária ultra-mínima
+- Desabilita TODAS as features não essenciais
+- Tenta build alternativo se o padrão falhar
+
+### 4. Configurações no Railway
 
 #### Variáveis de Ambiente
 Adicione estas variáveis no Railway:
@@ -44,7 +56,7 @@ O arquivo já está configurado com:
 - 8GB de memória
 - Instalação de dependências do sistema
 
-### 4. Otimizações Aplicadas
+### 5. Otimizações Aplicadas
 
 1. **Renderização Dinâmica**: Todas as páginas são forçadas a serem dinâmicas
 2. **Webpack Mínimo**: Apenas plugins essenciais são mantidos
@@ -52,7 +64,7 @@ O arquivo já está configurado com:
 4. **Fallbacks**: Módulos node têm fallback no client-side
 5. **Cache Desabilitado**: Para evitar problemas de memória
 
-### 5. Se Ainda Falhar
+### 6. Se Ainda Falhar
 
 1. **Aumente o Plano do Railway**: Considere um plano com mais memória
 2. **Use Docker**: Build local e push da imagem:
