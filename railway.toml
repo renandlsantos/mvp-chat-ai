@@ -11,7 +11,7 @@ restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 3
 
 [variables]
-NODE_OPTIONS = "--max-old-space-size=40960 --gc-global --expose-gc --optimize-for-size"
+NODE_OPTIONS = "--max-old-space-size=40960 --optimize-for-size"
 NEXT_TELEMETRY_DISABLED = "1"
 NEXT_PUBLIC_SERVICE_MODE = "server"
 DISABLE_SENTRY = "true"
