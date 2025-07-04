@@ -3,14 +3,14 @@
 import { Button } from '@lobehub/ui';
 import { Input } from 'antd';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import { BRANDING_NAME } from '@/const/branding';
 import { useUserStore } from '@/store/user';
 
-const AccessLoginPage = () => {
+const AccessLoginContent = () => {
   const { t } = useTranslation('error');
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -136,6 +136,18 @@ const AccessLoginPage = () => {
         )}
       </Flexbox>
     </Center>
+  );
+};
+
+const AccessLoginPage = () => {
+  return (
+    <Suspense fallback={
+      <Center style={{ height: '100vh', width: '100vw' }}>
+        <div>Loading...</div>
+      </Center>
+    }>
+      <AccessLoginContent />
+    </Suspense>
   );
 };
 

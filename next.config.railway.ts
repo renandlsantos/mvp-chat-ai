@@ -17,6 +17,8 @@ const nextConfig: NextConfig = {
     // Durante o build, ignorar erros de ESLint
     ignoreDuringBuilds: true,
   },
+  // Desabilitar geração estática para evitar erros de Suspense
+  staticPageGenerationTimeout: 120,
   webpack: (config, { isServer }) => {
     // Resolver o problema do módulo zipfile
     if (!isServer) {
