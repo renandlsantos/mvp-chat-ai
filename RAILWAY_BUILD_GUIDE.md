@@ -5,41 +5,54 @@ O build padrão do projeto consome muita memória devido ao tamanho da aplicaç�
 
 ## Soluções Implementadas
 
-### 1. Build Otimizado (Recomendado)
-Use o comando padrão que já está configurado no Railway:
+### 1. Build Simples (RECOMENDADO PARA RAILWAY)
+```bash
+pnpm run build:railway-simple
+```
+**Este é o comando configurado no Railway por padrão.**
+- NÃO modifica ou deleta arquivos existentes
+- Preserva o cache montado pelo Railway
+- Evita erro "Device or resource busy"
+
+### 2. Build Básico (Fallback)
+```bash
+pnpm run build:railway-basic
+```
+- Usa configuração MÍNIMA
+- Apenas configurações essenciais
+- Mais rápido que o build completo
+
+### 3. Build Otimizado (Original)
 ```bash
 pnpm run build:railway
 ```
-
-Este comando:
-- Usa configuração otimizada (`next.config.railway.ts`)
+- Configuração otimizada mas preserva cache
 - Define limite de memória para 8GB
-- Mantém plugins essenciais do webpack
-- Desabilita otimizações que consomem memória
+- Mantém plugins essenciais
 
-### 2. Build Seguro (Alternativa)
-Se o build padrão falhar com erro de memória, use:
+### 4. Build Seguro (Alternativa)
 ```bash
 pnpm run build:railway-safe
 ```
-
-Este comando:
 - Limpa builds anteriores (preservando cache)
 - Usa modo de compilação experimental
-- Cria BUILD_ID manualmente
 
-### 3. Build Mínimo (Emergência)
-Se ambos falharem, use o build mínimo:
+### 5. Build Ultra (Para timeout)
+```bash
+pnpm run build:railway-ultra
+```
+- Configuração extrema para evitar timeout
+- Desabilita TODAS as otimizações
+- Timeout estendido para 30 minutos
+
+### 6. Build Mínimo (Emergência)
 ```bash
 pnpm run build:railway-minimal
 ```
-
-Este comando:
 - Cria configuração temporária ultra-mínima
-- Desabilita TODAS as features não essenciais
-- Tenta build alternativo se o padrão falhar
+- Tenta build alternativo se falhar
 
-### 4. Configurações no Railway
+## Configurações no Railway
 
 #### Variáveis de Ambiente
 Adicione estas variáveis no Railway:
@@ -56,7 +69,7 @@ O arquivo já está configurado com:
 - 8GB de memória
 - Instalação de dependências do sistema
 
-### 5. Otimizações Aplicadas
+## Otimizações Aplicadas
 
 1. **Renderização Dinâmica**: Todas as páginas são forçadas a serem dinâmicas
 2. **Webpack Mínimo**: Apenas plugins essenciais são mantidos
@@ -64,7 +77,7 @@ O arquivo já está configurado com:
 4. **Fallbacks**: Módulos node têm fallback no client-side
 5. **Cache Desabilitado**: Para evitar problemas de memória
 
-### 6. Se Ainda Falhar
+## Se Ainda Falhar
 
 1. **Aumente o Plano do Railway**: Considere um plano com mais memória
 2. **Use Docker**: Build local e push da imagem:
