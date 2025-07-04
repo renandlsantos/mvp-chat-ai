@@ -11,8 +11,10 @@ cmds = [
 [phases.build]
 cmds = [
   "pnpm run prebuild",
-  "pnpm run build:railway"
+  "pnpm run build:railway-ultra"
 ]
+# Aumentar timeout para 30 minutos
+buildCommand = "pnpm run build:railway-ultra"
 
 [start]
 cmd = "pnpm run start"
