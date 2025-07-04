@@ -10,7 +10,7 @@ cmds = [
 
 [phases.build]
 cmds = [
-  "node scripts/railway-emergency-build.js"
+  "node scripts/railway-ultralight-build.js"
 ]
 
 [start]

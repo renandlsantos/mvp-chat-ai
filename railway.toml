@@ -1,6 +1,6 @@
 [build]
 builder = "nixpacks"
-buildCommand = "node scripts/railway-emergency-build.js"
+buildCommand = "node scripts/railway-ultralight-build.js"
 
 [deploy]
 startCommand = "NODE_OPTIONS='--max-old-space-size=32768' pnpm run start"

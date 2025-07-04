@@ -36,6 +36,7 @@
     "build:railway-minimal": "node scripts/railway-build-minimal.js",
     "build:railway-ultra": "node scripts/railway-minimal-ultra-build.js",
     "build:railway-emergency": "node scripts/railway-emergency-build.js",
+    "build:railway-ultralight": "node scripts/railway-ultralight-build.js",
     "build:railway-simple": "node scripts/railway-build-simple.js",
     "build:railway-basic": "node scripts/railway-build-basic.js",
     "postbuild": "npm run build-sitemap && npm run build-migrate-db",
