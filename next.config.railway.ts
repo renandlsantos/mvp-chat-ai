@@ -19,6 +19,10 @@ const nextConfig: NextConfig = {
   },
   // Desabilitar geração estática para evitar erros de Suspense
   staticPageGenerationTimeout: 120,
+  // Configurar para gerar menos páginas estáticas
+  generateBuildId: async () => 'build',
+  // Desabilitar otimizações de fonte
+  optimizeFonts: false,
   webpack: (config, { isServer }) => {
     // Resolver o problema do módulo zipfile
     if (!isServer) {
@@ -48,6 +52,10 @@ const nextConfig: NextConfig = {
       minimize: false, // Desabilitar minimização
       splitChunks: false, // Desabilitar split chunks
       runtimeChunk: false,
+      moduleIds: 'deterministic',
+      removeAvailableModules: false,
+      removeEmptyChunks: false,
+      sideEffects: false,
     };
     
     // Desabilitar cache

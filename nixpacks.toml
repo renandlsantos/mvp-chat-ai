@@ -18,7 +18,7 @@ cmds = [
 cmd = "pnpm run start"
 
 [variables]
-NODE_OPTIONS = "--max-old-space-size=7168"
+NODE_OPTIONS = "--max-old-space-size=8192"
 NEXT_TELEMETRY_DISABLED = "1"
 NEXT_PUBLIC_SERVICE_MODE = "server"
 DISABLE_SENTRY = "true"

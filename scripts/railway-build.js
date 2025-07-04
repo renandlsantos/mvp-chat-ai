@@ -17,13 +17,13 @@ try {
 
   // Não limpar cache pois está montado como volume no Railway
 
-  // Executar build com limite de memória
+  // Executar build com limite de memória aumentado
   console.log('🔨 Executando build...');
-  execSync('NODE_OPTIONS="--max-old-space-size=6144" next build', { 
+  execSync('NODE_OPTIONS="--max-old-space-size=8192" next build', { 
     stdio: 'inherit',
     env: {
       ...process.env,
-      NODE_OPTIONS: '--max-old-space-size=6144'
+      NODE_OPTIONS: '--max-old-space-size=8192'
     }
   });
 
