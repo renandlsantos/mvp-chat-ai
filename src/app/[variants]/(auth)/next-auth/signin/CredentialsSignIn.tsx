@@ -49,8 +49,8 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 
 interface SignInFormValues {
-  username: string;
   password: string;
+  username: string;
 }
 
 export default memo(() => {
@@ -61,7 +61,7 @@ export default memo(() => {
   const [form] = Form.useForm<SignInFormValues>();
   const { message } = App.useApp();
   const searchParams = useSearchParams();
-  const [loginResult, setLoginResult] = useState<{ success: boolean; message: string; callbackUrl?: string } | null>(null);
+  const [loginResult, setLoginResult] = useState<{ callbackUrl?: string, message: string; success: boolean; } | null>(null);
   
   // Redirect back to the page url
   const callbackUrl = searchParams.get('callbackUrl') ?? '/chat';
@@ -88,29 +88,29 @@ export default memo(() => {
     setLoading(true);
     try {
       const result = await signIn('credentials', {
-        username: values.username,
+        callbackUrl,
         password: values.password,
         redirect: false,
-        callbackUrl,
+        username: values.username,
       });
 
       if (result?.error) {
         setLoginResult({ 
-          success: false, 
-          message: t('auth:login.error') 
+          message: t('auth:login.error'), 
+          success: false 
         });
       } else if (result?.ok) {
         setLoginResult({ 
-          success: true, 
+          callbackUrl: callbackUrl, 
           message: t('auth:login.success'),
-          callbackUrl: callbackUrl
+          success: true
         });
       }
     } catch (error) {
       console.error('Login error:', error);
       setLoginResult({ 
-        success: false, 
-        message: t('auth:login.error') 
+        message: t('auth:login.error'), 
+        success: false 
       });
     } finally {
       setLoading(false);
@@ -142,29 +142,29 @@ export default memo(() => {
           </div>
           {/* Content */}
           <Form
+            autoComplete="off"
             form={form}
             layout="vertical"
             onFinish={handleSignIn}
-            autoComplete="off"
           >
             <Form.Item
               label={t('auth:login.username')}
               name="username"
               rules={[
-                { required: true, message: t('auth:login.usernameRequired') },
+                { message: t('auth:login.usernameRequired'), required: true },
               ]}
             >
-              <Input placeholder={t('auth:login.usernamePlaceholder')} autoComplete="username" />
+              <Input autoComplete="username" placeholder={t('auth:login.usernamePlaceholder')} />
             </Form.Item>
 
             <Form.Item
               label={t('auth:login.password')}
               name="password"
               rules={[
-                { required: true, message: t('auth:login.passwordRequired') },
+                { message: t('auth:login.passwordRequired'), required: true },
               ]}
             >
-              <Input.Password placeholder={t('auth:login.passwordPlaceholder')} autoComplete="current-password" />
+              <Input.Password autoComplete="current-password" placeholder={t('auth:login.passwordPlaceholder')} />
             </Form.Item>
 
             <Form.Item>

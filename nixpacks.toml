@@ -10,15 +10,16 @@ cmds = [
 
 [phases.build]
 cmds = [
-  "node scripts/railway-no-cache-build.js"
+  "node scripts/railway-emergency-build.js"
 ]
 
 [start]
 cmd = "pnpm run start"
 
 [variables]
-NODE_OPTIONS = "--max-old-space-size=32768"
+NODE_OPTIONS = "--max-old-space-size=50176 --gc-global --expose-gc --optimize-for-size"
 NEXT_TELEMETRY_DISABLED = "1"
 NEXT_PUBLIC_SERVICE_MODE = "server"
 DISABLE_SENTRY = "true"
 ANALYZE = "false"
+SKIP_ENV_VALIDATION = "true"

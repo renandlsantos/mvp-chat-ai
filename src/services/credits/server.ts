@@ -29,24 +29,24 @@ export class ServerCreditsService implements ICreditsService {
     }
   ) => {
     return await this.userCreditsModel.deductCredits(this.userId, amount, {
-      type: 'usage',
       description: details.description || 'AI model usage',
       messageId: details.messageId,
       model: details.modelName,
       tokenCount: details.tokensUsed,
+      type: 'usage',
     });
   };
 
   addCredits = async (
     amount: number,
     details: {
-      type: 'refill' | 'bonus' | 'subscription';
       description?: string;
+      type: 'refill' | 'bonus' | 'subscription';
     }
   ) => {
     await this.userCreditsModel.addCredits(this.userId, amount, {
-      type: details.type,
       description: details.description || `${details.type} credits`,
+      type: details.type,
     });
   };
 

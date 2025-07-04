@@ -1,7 +1,6 @@
 import { isEmpty } from 'lodash-es';
 import pMap from 'p-map';
 
-import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { getEnabledProviders } from '@/config/modelProviders/env';
 import { AiModelModel } from '@/database/models/aiModel';
 import { AiProviderModel } from '@/database/models/aiProvider';

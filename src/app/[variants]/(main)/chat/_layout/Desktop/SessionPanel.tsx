@@ -77,7 +77,7 @@ const SessionPanel = memo<PropsWithChildren>(({ children }) => {
   // Avoid hydration errors by not rendering DraggablePanel until client-side
   if (!mounted) {
     return (
-      <div style={{ width: sessionsWidth, height: '100%' }}>
+      <div style={{ height: '100%', width: sessionsWidth }}>
         {children}
       </div>
     );

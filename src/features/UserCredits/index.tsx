@@ -10,9 +10,9 @@ const { Title, Text } = Typography;
 
 export const UserCreditsDisplay = () => {
   const { data: userCredits, isLoading } = useQuery({
-    queryKey: ['userCredits'],
     queryFn: () => creditsService.getUserCredits(),
-    refetchInterval: 30000, // Refetch every 30 seconds
+    queryKey: ['userCredits'],
+    refetchInterval: 30_000, // Refetch every 30 seconds
   });
 
   if (isLoading || !userCredits) {
@@ -24,7 +24,7 @@ export const UserCreditsDisplay = () => {
 
   return (
     <Card size="small" style={{ margin: '8px 0' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ alignItems: 'center', display: 'flex', justifyContent: 'space-between' }}>
         <div>
           <Text strong>Créditos Restantes: {remaining}</Text>
           <div style={{ marginTop: 4 }}>

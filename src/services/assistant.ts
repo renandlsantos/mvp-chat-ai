@@ -11,8 +11,8 @@ class AssistantService {
 
     // For now, use regular marketplace until admin system is properly configured
     const data = await edgeClient.market.getAgentIndex.query({ 
-      locale,
-      adminOnly: false, // Temporarily disabled admin-only filtering
+      adminOnly: false,
+      locale, // Temporarily disabled admin-only filtering
     });
 
     return data.agents as unknown as DiscoverAssistantItem[];

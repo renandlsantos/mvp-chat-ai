@@ -1,7 +1,7 @@
 import Credentials from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
-import fs from 'fs/promises';
-import path from 'path';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 
 interface SSOProvider {
   id: string;
@@ -13,7 +13,7 @@ const USERS_FILE = path.join(process.cwd(), '.temp-users.json');
 
 async function getStoredUsers() {
   try {
-    const data = await fs.readFile(USERS_FILE, 'utf-8');
+    const data = await fs.readFile(USERS_FILE, 'utf8');
     return JSON.parse(data);
   } catch {
     return [];
@@ -23,20 +23,6 @@ async function getStoredUsers() {
 const credentialsProvider: SSOProvider = {
   id: 'credentials',
   provider: Credentials({
-    id: 'credentials',
-    name: 'Credenciais',
-    credentials: {
-      username: { 
-        label: 'Usuário', 
-        type: 'text', 
-        placeholder: 'Digite seu usuário' 
-      },
-      password: { 
-        label: 'Senha', 
-        type: 'password', 
-        placeholder: 'Digite sua senha' 
-      },
-    },
     async authorize(credentials) {
       if (!credentials?.username || !credentials?.password) {
         return null;
@@ -52,10 +38,10 @@ const credentialsProvider: SSOProvider = {
       ) {
         // Return admin user object
         return {
-          id: 'admin-user',
-          name: 'Administrador',
           email: 'admin@aihub.local',
+          id: 'admin-user',
           image: null,
+          name: 'Administrador',
         };
       }
 
@@ -89,10 +75,10 @@ const credentialsProvider: SSOProvider = {
 
         // Return user object for NextAuth
         return {
-          id: user.id,
-          name: user.fullName || user.username,
           email: user.email,
+          id: user.id,
           image: user.avatar,
+          name: user.fullName || user.username,
         };
       } catch (error) {
         console.error('Database auth error, trying file storage:', error);
@@ -116,10 +102,10 @@ const credentialsProvider: SSOProvider = {
           
           // Return user object for NextAuth
           return {
-            id: user.id,
-            name: user.fullName || user.username,
             email: user.email,
+            id: user.id,
             image: null,
+            name: user.fullName || user.username,
           };
         } catch (fileError) {
           console.error('File storage auth error:', fileError);
@@ -127,6 +113,20 @@ const credentialsProvider: SSOProvider = {
         }
       }
     },
+    credentials: {
+      password: { 
+        label: 'Senha', 
+        placeholder: 'Digite sua senha', 
+        type: 'password' 
+      },
+      username: { 
+        label: 'Usuário', 
+        placeholder: 'Digite seu usuário', 
+        type: 'text' 
+      },
+    },
+    id: 'credentials',
+    name: 'Credenciais',
   }),
 };
 

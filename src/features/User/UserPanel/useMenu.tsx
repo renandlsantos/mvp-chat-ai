@@ -1,4 +1,4 @@
-import { Icon } from '@lobehub/ui';
+import { Icon , Hotkey } from '@lobehub/ui';
 import { Badge } from 'antd';
 import { ItemType } from 'antd/es/menu/interface';
 import {
@@ -19,13 +19,11 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import type { MenuProps } from '@/components/Menu';
-import { Hotkey } from '@lobehub/ui';
 import { enableAuth } from '@/const/auth';
 import { BRANDING_EMAIL, LOBE_CHAT_CLOUD } from '@/const/branding';
 import { DEFAULT_HOTKEY_CONFIG } from '@/const/settings';
 import {
   CHANGELOG,
-  DOCUMENTS_REFER_URL,
   OFFICIAL_URL,
   UTM_SOURCE,
   mailTo,

@@ -1,6 +1,5 @@
 import { NextRequest } from 'next/server';
 
-import { getAppConfig } from '@/envs/app';
 import { getJWTPayload } from '@/utils/server/jwt';
 import { ServerCreditsService } from '@/services/credits/server';
 import { CREDIT_PLANS } from '@/services/credits';

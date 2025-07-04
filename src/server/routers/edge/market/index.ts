@@ -43,8 +43,8 @@ export const marketRouter = router({
     .input(
       z
         .object({
-          locale: z.string().optional(),
           adminOnly: z.boolean().optional().default(false),
+          locale: z.string().optional(),
         })
         .optional(),
     )

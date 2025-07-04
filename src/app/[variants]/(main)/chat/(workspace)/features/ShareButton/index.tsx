@@ -3,7 +3,7 @@
 import { ActionIcon } from '@lobehub/ui';
 import { Share2 } from 'lucide-react';
 import dynamic from 'next/dynamic';
-import { memo, useEffect, useState } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ClientOnly from '@/components/ClientOnly';
@@ -29,8 +29,8 @@ const ShareButton = memo<ShareButtonProps>(({ mobile, setOpen, open }) => {
       fallback={
         <div 
           style={{ 
-            width: 36, 
-            height: 36 
+            height: 36, 
+            width: 36 
           }} 
         />
       }

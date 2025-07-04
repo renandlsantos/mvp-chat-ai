@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
-import fs from 'fs/promises';
-import path from 'path';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 
 // Force Node.js runtime to allow database and file system access
 export const runtime = 'nodejs';
@@ -12,7 +12,7 @@ const USERS_FILE = path.join(process.cwd(), '.temp-users.json');
 
 async function getStoredUsers() {
   try {
-    const data = await fs.readFile(USERS_FILE, 'utf-8');
+    const data = await fs.readFile(USERS_FILE, 'utf8');
     return JSON.parse(data);
   } catch {
     return [];
@@ -65,15 +65,15 @@ export async function POST(req: NextRequest) {
 
       // Create user with password in preference field
       const [newUser] = await serverDB.insert(users).values({
-        id: crypto.randomUUID(),
-        username,
         email,
         fullName: username,
+        id: crypto.randomUUID(),
         preference: {
           auth: {
             passwordHash,
           },
         },
+        username,
       }).returning();
 
       console.log('User created successfully in database:', { id: newUser.id, username: newUser.username });
@@ -103,12 +103,12 @@ export async function POST(req: NextRequest) {
       
       // Create new user
       const newUser = {
-        id: crypto.randomUUID(),
-        username,
+        createdAt: new Date().toISOString(),
         email,
         fullName: username,
+        id: crypto.randomUUID(),
         passwordHash,
-        createdAt: new Date().toISOString(),
+        username,
       };
       
       users.push(newUser);

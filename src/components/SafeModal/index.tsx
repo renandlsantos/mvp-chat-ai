@@ -1,7 +1,7 @@
 'use client';
 
-import { Modal as AntModal, ModalProps } from 'antd';
-import { Modal as LobeModal, ModalProps as LobeModalProps } from '@lobehub/ui';
+import { ModalProps } from 'antd';
+import { ModalProps as LobeModalProps } from '@lobehub/ui';
 import dynamic from 'next/dynamic';
 import { memo, useEffect, useRef, useState } from 'react';
 
@@ -33,7 +33,7 @@ const SafeModal = memo<SafeModalProps>(({ variant = 'lobe', children, onCancel, 
       if (cleanupRef.current) {
         try {
           cleanupRef.current();
-        } catch (error) {
+        } catch {
           // Silenciosamente ignorar erros de limpeza
         }
       }

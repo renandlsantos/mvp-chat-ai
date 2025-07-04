@@ -24,8 +24,8 @@ const SettingButton = memo<{ mobile?: boolean }>(({ mobile }) => {
       fallback={
         <div 
           style={{ 
-            width: 36,
-            height: 36
+            height: 36,
+            width: 36
           }} 
         />
       }

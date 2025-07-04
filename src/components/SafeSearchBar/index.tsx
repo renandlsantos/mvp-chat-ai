@@ -18,8 +18,8 @@ const SafeSearchBar = memo<SearchBarProps>((props) => {
     return (
       <SearchBar 
         {...props} 
-        loading={false}
         enableShortKey={false}
+        loading={false}
         spotlight={false}
       />
     );

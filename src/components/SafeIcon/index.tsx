@@ -27,8 +27,8 @@ const SafeIcon = memo<SafeIconProps>((props) => {
         className={props.className}
         style={{
           display: 'inline-block',
-          width: size,
           height: size,
+          width: size,
           ...props.style
         }}
       />

@@ -23,9 +23,9 @@ const HeaderAction = memo<{ className?: string }>(({ className }) => {
     <ClientOnly
       fallback={
         <Flexbox className={className} gap={4} horizontal>
-          <div style={{ width: 36, height: 36 }} />
-          <div style={{ width: 36, height: 36 }} />
-          <div style={{ width: 36, height: 36 }} />
+          <div style={{ height: 36, width: 36 }} />
+          <div style={{ height: 36, width: 36 }} />
+          <div style={{ height: 36, width: 36 }} />
         </Flexbox>
       }
     >

@@ -13,10 +13,10 @@ import AuthProvider from '@/layout/AuthProvider';
 import GlobalProvider from '@/layout/GlobalProvider';
 import { Locales } from '@/locales/resources';
 import { DynamicLayoutProps } from '@/types/next';
+import { RouteVariants } from '@/utils/server/routeVariants';
 
 // Forçar renderização dinâmica no Railway
-export { dynamic, dynamicParams, revalidate, fetchCache, runtime, preferredRegion } from './layout.config';
-import { RouteVariants } from '@/utils/server/routeVariants';
+export { dynamic, dynamicParams, fetchCache, preferredRegion,revalidate, runtime } from './layout.config';
 
 const inVercel = process.env.VERCEL === '1';
 

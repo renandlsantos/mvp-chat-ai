@@ -17,11 +17,11 @@ const DraggablePanelContainer = memo<DraggablePanelProps>((props) => {
   if (!mounted) {
     return (
       <div style={{ 
+        height: props.size?.height || 'auto',
+        maxHeight: props.maxHeight,
+        minHeight: props.minHeight,
         position: 'relative',
         width: '100%',
-        height: props.size?.height || 'auto',
-        minHeight: props.minHeight,
-        maxHeight: props.maxHeight,
       }}>
         {props.children}
       </div>

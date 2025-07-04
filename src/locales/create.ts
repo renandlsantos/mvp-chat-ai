@@ -7,7 +7,7 @@ import { isRtlLang } from 'rtl-detect';
 import { getDebugConfig } from '@/config/debug';
 import { DEFAULT_LANG } from '@/const/locale';
 import { normalizeLocale } from '@/locales/resources';
-import { isDev, isOnServerSide } from '@/utils/env';
+import { isOnServerSide } from '@/utils/env';
 
 const { I18N_DEBUG, I18N_DEBUG_BROWSER, I18N_DEBUG_SERVER } = getDebugConfig();
 const debugMode = (I18N_DEBUG ?? isOnServerSide) ? I18N_DEBUG_SERVER : I18N_DEBUG_BROWSER;

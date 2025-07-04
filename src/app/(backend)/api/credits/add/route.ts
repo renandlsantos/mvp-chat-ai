@@ -1,6 +1,5 @@
 import { NextRequest } from 'next/server';
 
-import { getAppConfig } from '@/envs/app';
 import { getJWTPayload } from '@/utils/server/jwt';
 import { ServerCreditsService } from '@/services/credits/server';
 
@@ -59,8 +58,8 @@ export const POST = async (req: NextRequest) => {
     await creditsService.checkAndCreateUserCredits();
     
     await creditsService.addCredits(amount, {
-      type,
       description,
+      type,
     });
 
     return Response.json({ success: true });

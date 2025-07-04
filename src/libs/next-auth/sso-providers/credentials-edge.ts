@@ -9,20 +9,6 @@ interface SSOProvider {
 const credentialsProvider: SSOProvider = {
   id: 'credentials',
   provider: Credentials({
-    id: 'credentials',
-    name: 'Credenciais',
-    credentials: {
-      username: { 
-        label: 'Usuário', 
-        type: 'text', 
-        placeholder: 'Digite seu usuário' 
-      },
-      password: { 
-        label: 'Senha', 
-        type: 'password', 
-        placeholder: 'Digite sua senha' 
-      },
-    },
     async authorize(credentials) {
       if (!credentials?.username || !credentials?.password) {
         return null;
@@ -38,10 +24,10 @@ const credentialsProvider: SSOProvider = {
       ) {
         // Return admin user object
         return {
-          id: 'admin-user',
-          name: 'Administrador',
           email: 'admin@aihub.local',
+          id: 'admin-user',
           image: null,
+          name: 'Administrador',
         };
       }
 
@@ -49,6 +35,20 @@ const credentialsProvider: SSOProvider = {
       // User registration will only work in Node.js runtime
       return null;
     },
+    credentials: {
+      password: { 
+        label: 'Senha', 
+        placeholder: 'Digite sua senha', 
+        type: 'password' 
+      },
+      username: { 
+        label: 'Usuário', 
+        placeholder: 'Digite seu usuário', 
+        type: 'text' 
+      },
+    },
+    id: 'credentials',
+    name: 'Credenciais',
   }),
 };
 

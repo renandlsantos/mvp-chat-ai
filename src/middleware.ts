@@ -214,9 +214,9 @@ const nextAuthMiddleware = NextAuthEdge.auth((req) => {
 
   // Create a new response with mutable headers
   const response = new NextResponse(defaultResponse.body, {
+    headers: new Headers(defaultResponse.headers),
     status: defaultResponse.status,
     statusText: defaultResponse.statusText,
-    headers: new Headers(defaultResponse.headers),
   });
 
   // Remove & amend OAuth authorized header
@@ -273,9 +273,9 @@ const clerkAuthMiddleware = clerkMiddleware(
 
     // Create a new response with mutable headers
     const response = new NextResponse(defaultResponse.body, {
+      headers: new Headers(defaultResponse.headers),
       status: defaultResponse.status,
       statusText: defaultResponse.statusText,
-      headers: new Headers(defaultResponse.headers),
     });
 
     // If OIDC is enabled and Clerk user is logged in, add OIDC session pre-sync header

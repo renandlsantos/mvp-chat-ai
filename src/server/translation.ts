@@ -4,7 +4,6 @@ import { get } from 'lodash-es';
 
 import { DEFAULT_LANG } from '@/const/locale';
 import { Locales, NS, normalizeLocale } from '@/locales/resources';
-import { isDev } from '@/utils/env';
 
 export const getLocale = async (hl?: string): Promise<Locales> => {
   if (hl) return normalizeLocale(hl) as Locales;

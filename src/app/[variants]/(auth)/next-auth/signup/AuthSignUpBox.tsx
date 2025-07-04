@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Input as LobeInput, Text } from '@lobehub/ui';
+import { Button, Text } from '@lobehub/ui';
 import { Col, Flex, Row, Form, Input, App } from 'antd';
 import { createStyles } from 'antd-style';
 import { useRouter } from 'next/navigation';
@@ -48,10 +48,10 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 
 interface SignUpFormValues {
-  username: string;
+  confirmPassword: string;
   email: string;
   password: string;
-  confirmPassword: string;
+  username: string;
 }
 
 export default memo(() => {
@@ -61,7 +61,7 @@ export default memo(() => {
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm<SignUpFormValues>();
   const { message } = App.useApp();
-  const [signupResult, setSignupResult] = useState<{ success: boolean; message: string } | null>(null);
+  const [signupResult, setSignupResult] = useState<{ message: string, success: boolean; } | null>(null);
   const [signupSuccess, setSignupSuccess] = useState(false);
 
   // Handle message display in useEffect to avoid render phase warnings
@@ -94,7 +94,7 @@ export default memo(() => {
 
   const handleSignUp = async (values: SignUpFormValues) => {
     if (values.password !== values.confirmPassword) {
-      setSignupResult({ success: false, message: t('auth:signup.passwordMismatch') });
+      setSignupResult({ message: t('auth:signup.passwordMismatch'), success: false });
       return;
     }
 
@@ -103,15 +103,15 @@ export default memo(() => {
       console.log('Sending signup request:', values);
       
       const response = await fetch('/api/auth/signup', {
-        method: 'POST',
+        body: JSON.stringify({
+          email: values.email,
+          password: values.password,
+          username: values.username,
+        }),
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          username: values.username,
-          email: values.email,
-          password: values.password,
-        }),
+        method: 'POST',
       });
 
       console.log('Response status:', response.status);
@@ -121,22 +121,22 @@ export default memo(() => {
       if (response.ok || response.status === 200 || response.status === 201) {
         console.log('Signup successful, setting success state');
         setSignupResult({ 
-          success: true, 
-          message: data.message || t('auth:signup.success') 
+          message: data.message || t('auth:signup.success'), 
+          success: true 
         });
         // Also reset form
         form.resetFields();
       } else {
         setSignupResult({ 
-          success: false, 
-          message: data.error || t('auth:signup.error') 
+          message: data.error || t('auth:signup.error'), 
+          success: false 
         });
       }
     } catch (error) {
       console.error('Signup error:', error);
       setSignupResult({ 
-        success: false, 
-        message: t('auth:signup.error') 
+        message: t('auth:signup.error'), 
+        success: false 
       });
     } finally {
       setLoading(false);
@@ -176,8 +176,8 @@ export default memo(() => {
               label={t('auth:signup.username')}
               name="username"
               rules={[
-                { required: true, message: t('auth:signup.usernameRequired') },
-                { min: 3, message: t('auth:signup.usernameMin') },
+                { message: t('auth:signup.usernameRequired'), required: true },
+                { message: t('auth:signup.usernameMin'), min: 3 },
               ]}
             >
               <Input placeholder={t('auth:signup.usernamePlaceholder')} />
@@ -187,8 +187,8 @@ export default memo(() => {
               label={t('auth:signup.email')}
               name="email"
               rules={[
-                { required: true, message: t('auth:signup.emailRequired') },
-                { type: 'email', message: t('auth:signup.emailInvalid') },
+                { message: t('auth:signup.emailRequired'), required: true },
+                { message: t('auth:signup.emailInvalid'), type: 'email' },
               ]}
             >
               <Input placeholder={t('auth:signup.emailPlaceholder')} type="email" />
@@ -198,8 +198,8 @@ export default memo(() => {
               label={t('auth:signup.password')}
               name="password"
               rules={[
-                { required: true, message: t('auth:signup.passwordRequired') },
-                { min: 6, message: t('auth:signup.passwordMin') },
+                { message: t('auth:signup.passwordRequired'), required: true },
+                { message: t('auth:signup.passwordMin'), min: 6 },
               ]}
             >
               <Input.Password placeholder={t('auth:signup.passwordPlaceholder')} />
@@ -209,7 +209,7 @@ export default memo(() => {
               label={t('auth:signup.confirmPassword')}
               name="confirmPassword"
               rules={[
-                { required: true, message: t('auth:signup.confirmPasswordRequired') },
+                { message: t('auth:signup.confirmPasswordRequired'), required: true },
               ]}
             >
               <Input.Password placeholder={t('auth:signup.confirmPasswordPlaceholder')} />

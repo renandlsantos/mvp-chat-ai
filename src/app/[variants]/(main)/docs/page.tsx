@@ -6,36 +6,36 @@ export default function DocsPage() {
   return (
     <div
       style={{
-        width: '100vw',
-        height: '100vh',
+        alignItems: 'center',
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        color: 'white',
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+        height: '100vh',
         justifyContent: 'center',
+        left: 0,
         position: 'fixed',
         top: 0,
-        left: 0,
-        color: 'white',
-        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+        width: '100vw'
       }}
     >
       <Link 
         href="/chat"
         style={{
-          position: 'absolute',
-          top: '24px',
-          left: '24px',
-          color: 'white',
-          textDecoration: 'none',
-          background: 'rgba(255, 255, 255, 0.2)',
-          padding: '12px 20px',
-          borderRadius: '8px',
-          display: 'inline-flex',
           alignItems: 'center',
-          gap: '8px',
-          fontSize: '16px',
           backdropFilter: 'blur(10px)',
+          background: 'rgba(255, 255, 255, 0.2)',
+          borderRadius: '8px',
+          color: 'white',
+          display: 'inline-flex',
+          fontSize: '16px',
+          gap: '8px',
+          left: '24px',
+          padding: '12px 20px',
+          position: 'absolute',
+          textDecoration: 'none',
+          top: '24px',
           transition: 'background 0.3s ease'
         }}
       >
@@ -50,7 +50,7 @@ export default function DocsPage() {
         <h2 style={{ fontSize: '24px', fontWeight: 'normal', margin: '0 0 24px 0', opacity: 0.9 }}>
           Em Breve
         </h2>
-        <p style={{ fontSize: '16px', opacity: 0.8, maxWidth: '500px', margin: '0 auto' }}>
+        <p style={{ fontSize: '16px', margin: '0 auto', maxWidth: '500px', opacity: 0.8 }}>
           Em breve iremos apresentar documentação completa para você.
         </p>
       </div>

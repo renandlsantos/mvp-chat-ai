@@ -15,22 +15,22 @@ export default function Error({
 
   return (
     <div style={{ 
+      alignItems: 'center', 
       display: 'flex', 
       flexDirection: 'column', 
-      alignItems: 'center', 
-      justifyContent: 'center', 
+      gap: '1rem', 
       height: '100vh',
-      gap: '1rem'
+      justifyContent: 'center'
     }}>
       <h2>Algo deu errado!</h2>
       <button
         onClick={() => reset()}
         style={{
-          padding: '0.5rem 1rem',
-          borderRadius: '0.25rem',
-          border: '1px solid #ccc',
           background: '#fff',
-          cursor: 'pointer'
+          border: '1px solid #ccc',
+          borderRadius: '0.25rem',
+          cursor: 'pointer',
+          padding: '0.5rem 1rem'
         }}
       >
         Tentar novamente
