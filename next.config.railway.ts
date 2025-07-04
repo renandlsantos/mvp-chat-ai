@@ -6,12 +6,7 @@ const nextConfig: NextConfig = {
   
   experimental: {
     serverMinification: false,
-    optimizePackageImports: [],
     webpackBuildWorker: false,
-    // Desabilitar features experimentais que consomem memória
-    instrumentationHook: false,
-    parallelServerCompiles: false,
-    parallelServerBuildTraces: false,
   },
   
   // Ignorar erros para acelerar o build
@@ -22,38 +17,13 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   
-  // Desabilitar completamente a geração estática
-  generateStaticParams: false,
-  dynamicParams: true,
-  
   // Configurações para reduzir memória
-  staticPageGenerationTimeout: 10, // Reduzir timeout
-  generateBuildId: async () => 'railway-build',
-  optimizeFonts: false,
+  staticPageGenerationTimeout: 60,
+  generateBuildId: async () => 'railway-' + Date.now(),
   
-  // Desabilitar recursos pesados
+  // Desabilitar otimização de imagens
   images: {
     unoptimized: true,
-    disableStaticImages: true,
-  },
-  
-  // Headers vazios para evitar processamento
-  async headers() {
-    return [];
-  },
-  
-  // Redirects vazios para evitar processamento
-  async redirects() {
-    return [];
-  },
-  
-  // Rewrites vazios para evitar processamento
-  async rewrites() {
-    return {
-      beforeFiles: [],
-      afterFiles: [],
-      fallback: [],
-    };
   },
   
   reactStrictMode: false,
@@ -61,121 +31,58 @@ const nextConfig: NextConfig = {
   generateEtags: false,
   productionBrowserSourceMaps: false,
   
-  // Desabilitar todas as otimizações de bundle
-  swcMinify: false,
-  
   webpack: (config, { isServer }) => {
-    // Resolver problemas de módulos
+    // Resolver problemas de módulos apenas no client
     if (!isServer) {
-      config.resolve = {
-        ...config.resolve,
-        fallback: {
-          ...config.resolve?.fallback,
-          zipfile: false,
-          fs: false,
-          path: false,
-          crypto: false,
-          stream: false,
-          util: false,
-          buffer: false,
-          http: false,
-          https: false,
-          os: false,
-          querystring: false,
-          zlib: false,
-          net: false,
-          tls: false,
-          child_process: false,
-        },
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        zipfile: false,
+        fs: false,
+        path: false,
+        crypto: false,
       };
     }
     
-    // Ignorar módulos problemáticos no servidor
-    if (isServer) {
-      config.externals = [
-        ...(Array.isArray(config.externals) ? config.externals : [config.externals]),
-        { zipfile: 'commonjs zipfile' },
-        'canvas',
-        'jsdom',
-        '@napi-rs/canvas',
-      ];
-    }
-    
-    // Desabilitar TODAS as otimizações
+    // Configurações de otimização conservadoras
     config.optimization = {
+      ...config.optimization,
       minimize: false,
-      minimizer: [],
-      splitChunks: false,
-      runtimeChunk: false,
-      moduleIds: 'named',
-      chunkIds: 'named',
-      nodeEnv: 'production',
-      usedExports: false,
-      sideEffects: false,
-      providedExports: false,
-      concatenateModules: false,
-      flagIncludedChunks: false,
-      removeAvailableModules: false,
-      removeEmptyChunks: false,
-      mergeDuplicateChunks: false,
-      mangleExports: false,
-      mangleWasmImports: false,
-      realContentHash: false,
-      innerGraph: false,
+      splitChunks: {
+        chunks: 'async',
+        minSize: 20000,
+        cacheGroups: {
+          default: false,
+          vendors: false,
+        },
+      },
     };
     
-    // Desabilitar cache completamente
-    config.cache = false;
+    // Configurar paralelismo reduzido
+    config.parallelism = 2;
     
-    // Configurações mínimas de performance
-    config.performance = {
-      hints: false,
-    };
-    
-    // Reduzir paralelismo ao mínimo
-    config.parallelism = 1;
-    
-    // Sem source maps
+    // Desabilitar source maps
     config.devtool = false;
     
-    // Desabilitar todos os plugins não essenciais
-    config.plugins = config.plugins.filter((plugin) => {
-      const pluginName = plugin.constructor.name;
-      const essentialPlugins = [
-        'DefinePlugin',
-        'BuildManifestPlugin',
-        'ReactFreshWebpackPlugin',
-        'NextJsRequireCacheHotReloader',
-      ];
-      return essentialPlugins.some(name => pluginName.includes(name));
-    });
-    
-    // Configurações adicionais para reduzir memória
-    if (config.module?.rules) {
-      config.module.rules.forEach((rule: any) => {
-        if (rule.oneOf) {
-          rule.oneOf.forEach((oneOf: any) => {
-            if (oneOf.use?.loader?.includes('babel-loader')) {
-              oneOf.use.options = {
-                ...oneOf.use.options,
-                cacheDirectory: false,
-                cacheCompression: false,
-              };
-            }
-          });
-        }
-      });
-    }
+    // Adicionar plugin para ignorar módulos problemáticos
+    const webpack = require('webpack');
+    config.plugins.push(
+      new webpack.IgnorePlugin({
+        resourceRegExp: /^zipfile$/,
+      })
+    );
     
     return config;
   },
   
-  // Desabilitar transpilação de pacotes
-  transpilePackages: [],
+  // Configurar headers mínimos
+  async headers() {
+    return [];
+  },
   
-  // Configuração mínima do servidor
-  serverRuntimeConfig: {},
-  publicRuntimeConfig: {},
+  // Configurar redirects mínimos
+  async redirects() {
+    return [];
+  },
 };
 
 export default nextConfig;
