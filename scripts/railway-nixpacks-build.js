@@ -16,10 +16,18 @@ process.env.DISABLE_SENTRY = 'true';
 process.env.ANALYZE = 'false';
 process.env.SKIP_ENV_VALIDATION = 'true';
 
-// Clean previous builds
+// Clean previous builds (skip if in Docker with mounted cache)
 if (fs.existsSync('.next')) {
-  console.log('🧹 Cleaning .next directory...');
-  execSync('rm -rf .next', { stdio: 'inherit' });
+  console.log('🧹 Attempting to clean .next directory...');
+  try {
+    // Try to remove .next directory, but don't fail if it's mounted
+    execSync('rm -rf .next/standalone .next/static .next/server .next/types 2>/dev/null || true', { 
+      stdio: 'inherit',
+      shell: true 
+    });
+  } catch (e) {
+    console.log('⚠️  Could not clean .next directory (probably mounted cache), continuing...');
+  }
 }
 
 // Create a minimal next.config.js to override complex configs

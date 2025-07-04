@@ -10,7 +10,7 @@ cmds = [
 
 [phases.build]
 cmds = [
-  "pnpm run build:railway"
+  "node scripts/railway-no-cache-build.js"
 ]
 
 [start]
