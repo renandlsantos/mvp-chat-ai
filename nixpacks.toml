@@ -1,5 +1,5 @@
 [phases.setup]
-nixPkgs = ["nodejs_20", "libuuid"]
+nixPkgs = ["nodejs_22", "libuuid", "openssl"]
 
 [phases.install]
 cmds = [
@@ -10,7 +10,7 @@ cmds = [
 
 [phases.build]
 cmds = [
-  "pnpm run build"
+  "pnpm run build:railway"
 ]
 
 [start]

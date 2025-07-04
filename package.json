@@ -37,6 +37,7 @@
     "build:railway-ultra": "node scripts/railway-build-ultra.js",
     "build:railway-simple": "node scripts/railway-build-simple.js",
     "build:railway-basic": "node scripts/railway-build-basic.js",
+    "build:railway": "node scripts/railway-nixpacks-build.js",
     "postbuild": "npm run build-sitemap && npm run build-migrate-db",
     "build-migrate-db": "bun run db:migrate",
     "build-sitemap": "tsx ./scripts/buildSitemapIndex/index.ts",
