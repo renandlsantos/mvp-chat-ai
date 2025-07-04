@@ -16,14 +16,27 @@ try {
   console.log('⚙️ Aplicando configuração ULTRA otimizada...');
   fs.renameSync('next.config.railway-ultra.ts', 'next.config.ts');
 
-  // 3. Limpar completamente a pasta .next
+  // 3. Limpar pasta .next (preservando cache montado pelo Railway)
   if (fs.existsSync('.next')) {
-    console.log('🧹 Limpando build anterior completamente...');
-    execSync('rm -rf .next', { stdio: 'inherit' });
+    console.log('🧹 Limpando build anterior (preservando cache)...');
+    // Listar conteúdo de .next
+    const nextContents = fs.readdirSync('.next');
+    
+    // Deletar tudo EXCETO a pasta cache
+    nextContents.forEach(item => {
+      if (item !== 'cache') {
+        const itemPath = `.next/${item}`;
+        try {
+          execSync(`rm -rf "${itemPath}"`, { stdio: 'inherit' });
+        } catch (e) {
+          console.log(`⚠️ Não foi possível remover ${itemPath}`);
+        }
+      }
+    });
+  } else {
+    // 4. Criar estrutura mínima se não existir
+    fs.mkdirSync('.next', { recursive: true });
   }
-
-  // 4. Criar estrutura mínima
-  fs.mkdirSync('.next', { recursive: true });
 
   // 5. Configurar ambiente para build rápido
   const env = {

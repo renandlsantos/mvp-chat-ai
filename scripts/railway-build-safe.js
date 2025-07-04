@@ -35,26 +35,22 @@ try {
   console.log('⚙️ Aplicando configuração otimizada...');
   fs.renameSync('next.config.railway.ts', 'next.config.ts');
 
-  // 3. Limpar builds anteriores (exceto cache)
+  // 3. Limpar builds anteriores (preservando cache montado)
   console.log('🧹 Limpando builds anteriores...');
   if (fs.existsSync('.next')) {
-    // Preservar apenas o cache
-    const cacheDir = '.next/cache';
-    const hasCache = fs.existsSync(cacheDir);
+    const nextContents = fs.readdirSync('.next');
     
-    if (hasCache) {
-      // Mover cache temporariamente
-      fs.renameSync(cacheDir, '.next-cache-temp');
-    }
-    
-    // Remover .next
-    execSync('rm -rf .next', { stdio: 'inherit' });
-    
-    // Restaurar cache
-    if (hasCache) {
-      fs.mkdirSync('.next', { recursive: true });
-      fs.renameSync('.next-cache-temp', cacheDir);
-    }
+    // Deletar tudo EXCETO a pasta cache
+    nextContents.forEach(item => {
+      if (item !== 'cache') {
+        const itemPath = `.next/${item}`;
+        try {
+          execSync(`rm -rf "${itemPath}"`, { stdio: 'inherit' });
+        } catch (e) {
+          console.log(`⚠️ Não foi possível remover ${itemPath}`);
+        }
+      }
+    });
   }
 
   // 4. Criar estrutura .next básica

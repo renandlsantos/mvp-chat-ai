@@ -15,7 +15,20 @@ try {
   console.log('⚙️ Aplicando configuração otimizada...');
   fs.renameSync('next.config.railway.ts', 'next.config.ts');
 
-  // Não limpar cache pois está montado como volume no Railway
+  // Limpar build anterior (preservando cache montado pelo Railway)
+  if (fs.existsSync('.next')) {
+    console.log('🧹 Limpando build anterior (preservando cache)...');
+    const nextContents = fs.readdirSync('.next');
+    nextContents.forEach(item => {
+      if (item !== 'cache') {
+        try {
+          execSync(`rm -rf ".next/${item}"`, { stdio: 'inherit' });
+        } catch (e) {
+          console.log(`⚠️ Não foi possível remover .next/${item}`);
+        }
+      }
+    });
+  }
 
   // Executar build com limite de memória aumentado
   console.log('🔨 Executando build...');
