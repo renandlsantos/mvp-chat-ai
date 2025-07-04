@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import ClientOnly from '@/components/ClientOnly';
 import { DESKTOP_HEADER_ICON_SIZE, MOBILE_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useSessionStore } from '@/store/session';
@@ -18,6 +19,23 @@ const AgentSettings = dynamic(() => import('./AgentSettings'), {
 });
 
 const SettingButton = memo<{ mobile?: boolean }>(({ mobile }) => {
+  return (
+    <ClientOnly
+      fallback={
+        <div 
+          style={{ 
+            width: 36,
+            height: 36
+          }} 
+        />
+      }
+    >
+      <SettingButtonContent mobile={mobile} />
+    </ClientOnly>
+  );
+});
+
+const SettingButtonContent = memo<{ mobile?: boolean }>(({ mobile }) => {
   const hotkey = useUserStore(settingsSelectors.getHotkeyById(HotkeyEnum.OpenChatSettings));
   const { t } = useTranslation('common');
   const openChatSettings = useOpenChatSettings();

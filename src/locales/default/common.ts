@@ -33,7 +33,7 @@ export default {
   blog: '产品博客',
   branching: '创建子话题',
   branchingDisable:
-    '「子话题」功能在当前模式下不可用，如需该功能，请切换到 Postgres/Pglite DB 模式或使用 LobeChat Cloud',
+    '「子话题」功能需要服务器部署模式并配置数据库支持',
   cancel: '取消',
   changelog: '更新日志',
   clientDB: {
@@ -345,9 +345,7 @@ export default {
     anonymousNickName: '匿名用户',
     billing: '账单管理',
     cloud: '体验 {{name}}',
-    community: '社区版',
     data: '数据存储',
-    defaultNickname: '社区版用户',
     discord: '社区支持',
     docs: '使用文档',
     email: '邮件支持',

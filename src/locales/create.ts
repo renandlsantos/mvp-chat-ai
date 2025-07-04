@@ -18,8 +18,7 @@ export const createI18nNext = (lang?: string) => {
     .use(LanguageDetector)
     .use(
       resourcesToBackend(async (lng: string, ns: string) => {
-        if (isDev && lng === 'zh-CN') return import(`./default/${ns}`);
-
+        // Always load from the JSON files, even in development
         return import(`@/../locales/${normalizeLocale(lng)}/${ns}.json`);
       }),
     );

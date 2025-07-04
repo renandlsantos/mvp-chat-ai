@@ -100,10 +100,10 @@ export const useAppearance = () => {
     baseTheme: isDarkMode ? dark : undefined,
     elements: styles,
     layout: {
-      helpPageUrl: BRANDING_URL.help ?? 'https://lobehub.com/docs',
-      privacyPageUrl: BRANDING_URL.privacy ?? 'https://lobehub.com/privacy',
+      helpPageUrl: BRANDING_URL.help ?? 'https://agentssaas.com/docs',
+      privacyPageUrl: BRANDING_URL.privacy ?? 'https://agentssaas.com/privacy',
       socialButtonsVariant: 'blockButton',
-      termsPageUrl: BRANDING_URL.terms ?? 'https://lobehub.com/terms',
+      termsPageUrl: BRANDING_URL.terms ?? 'https://agentssaas.com/terms',
     },
     variables: {
       borderRadius: `${theme.borderRadius}px`,

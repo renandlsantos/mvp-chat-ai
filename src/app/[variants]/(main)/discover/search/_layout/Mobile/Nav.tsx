@@ -1,9 +1,10 @@
 'use client';
 
-import { Tabs } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
+
+import SafeTabs from '@/components/SafeTabs';
 
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { DiscoverTab } from '@/types/discover';
@@ -35,7 +36,7 @@ const Nav = memo(() => {
 
   return (
     <Flexbox style={{ paddingInline: 16 }}>
-      <Tabs
+      <SafeTabs
         activeKey={activeKey}
         compact
         items={items

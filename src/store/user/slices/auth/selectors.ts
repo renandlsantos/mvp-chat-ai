@@ -11,10 +11,7 @@ const DEFAULT_USERNAME = BRANDING_NAME;
 const nickName = (s: UserStore) => {
   const defaultNickName = s.user?.fullName || s.user?.username;
   if (!enableAuth) {
-    if (isDesktop) {
-      return defaultNickName;
-    }
-    return t('userPanel.defaultNickname', { ns: 'common' });
+    return defaultNickName || DEFAULT_USERNAME;
   }
 
   if (s.isSignedIn) return defaultNickName;

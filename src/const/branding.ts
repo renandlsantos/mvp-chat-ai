@@ -2,12 +2,12 @@
 // if you want to use it in the commercial usage
 // please contact us for more information: hello@lobehub.com
 
-export const LOBE_CHAT_CLOUD = 'LobeChat Cloud';
+export const LOBE_CHAT_CLOUD = 'Agents SAAS Cloud';
 
-export const BRANDING_NAME = 'LobeChat';
+export const BRANDING_NAME = 'Agents SAAS';
 export const BRANDING_LOGO_URL = '';
 
-export const ORG_NAME = 'LobeHub';
+export const ORG_NAME = 'Agents SAAS';
 
 export const BRANDING_URL = {
   help: undefined,
@@ -16,14 +16,14 @@ export const BRANDING_URL = {
 };
 
 export const SOCIAL_URL = {
-  discord: 'https://discord.gg/AYFPHvv2jT',
-  github: 'https://github.com/lobehub',
-  medium: 'https://medium.com/@lobehub',
-  x: 'https://x.com/lobehub',
-  youtube: 'https://www.youtube.com/@lobehub',
+  discord: 'https://discord.gg/agentssaas',
+  github: 'https://github.com/agentssaas',
+  medium: 'https://medium.com/@agentssaas',
+  x: 'https://x.com/agentssaas',
+  youtube: 'https://www.youtube.com/@agentssaas',
 };
 
 export const BRANDING_EMAIL = {
-  business: 'hello@lobehub.com',
-  support: 'support@lobehub.com',
+  business: 'hello@agentssaas.com',
+  support: 'support@agentssaas.com',
 };

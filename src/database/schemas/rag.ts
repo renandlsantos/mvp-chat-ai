@@ -7,7 +7,6 @@ import {
   uniqueIndex,
   uuid,
   varchar,
-  vector,
 } from 'drizzle-orm/pg-core';
 
 import { timestamps } from './_helpers';
@@ -70,7 +69,7 @@ export const embeddings = pgTable(
     chunkId: uuid('chunk_id')
       .references(() => chunks.id, { onDelete: 'cascade' })
       .unique(),
-    embeddings: vector('embeddings', { dimensions: 1024 }),
+    embeddings: jsonb('embeddings'),
     model: text('model'),
     clientId: text('client_id'),
     userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),

@@ -7,6 +7,7 @@ import { PropsWithChildren, Suspense, memo } from 'react';
 import { HotkeysProvider } from 'react-hotkeys-hook';
 import { Flexbox } from 'react-layout-kit';
 
+import ClientOnly from '@/components/ClientOnly';
 import { isDesktop } from '@/const/version';
 import { BANNER_HEIGHT } from '@/features/AlertBanner/CloudBanner';
 import TitleBar, { TITLE_BAR_HEIGHT } from '@/features/ElectronTitlebar';
@@ -48,7 +49,11 @@ const Layout = memo<PropsWithChildren>(({ children }) => {
         }}
         width={'100%'}
       >
-        {!hideSideBar && <SideBar />}
+        {!hideSideBar && (
+          <ClientOnly fallback={<div style={{ width: 280 }} />}>
+            <SideBar />
+          </ClientOnly>
+        )}
         {isDesktop ? (
           <Flexbox
             style={{
@@ -66,10 +71,12 @@ const Layout = memo<PropsWithChildren>(({ children }) => {
           children
         )}
       </Flexbox>
-      <HotkeyHelperPanel />
-      <Suspense>
-        <RegisterHotkeys />
-      </Suspense>
+      <ClientOnly>
+        <HotkeyHelperPanel />
+        <Suspense>
+          <RegisterHotkeys />
+        </Suspense>
+      </ClientOnly>
     </HotkeysProvider>
   );
 });

@@ -83,4 +83,21 @@ export class AssistantStore {
       throw e;
     }
   };
+
+  /**
+   * Get agents created by admin users only
+   * TODO: Implement when database is properly configured for edge runtime
+   */
+  getAdminAgentsIndex = async (
+    locale: Locales = DEFAULT_LANG,
+    revalidate?: number,
+  ): Promise<AgentStoreIndex> => {
+    // For now, return empty list to avoid edge runtime issues
+    // TODO: Implement when database access is resolved
+    console.warn('[AdminAgentIndexWarning] Admin agent filtering not implemented yet');
+    return {
+      agents: [],
+      schemaVersion: 1,
+    };
+  };
 }

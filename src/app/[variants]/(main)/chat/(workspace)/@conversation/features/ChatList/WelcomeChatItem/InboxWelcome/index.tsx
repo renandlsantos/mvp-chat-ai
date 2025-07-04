@@ -78,12 +78,13 @@ const InboxWelcome = memo(() => {
             appName: BRANDING_NAME,
           })}
         </Markdown>
+        {/* Temporarily disabled agent suggestions
         {showWelcomeSuggest && (
           <>
             <AgentsSuggest mobile={mobile} />
             {!isCustomBranding && <QuestionSuggest mobile={mobile} />}
           </>
-        )}
+        )} */}
       </Flexbox>
     </Center>
   );

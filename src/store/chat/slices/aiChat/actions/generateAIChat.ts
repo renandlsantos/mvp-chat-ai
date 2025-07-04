@@ -9,6 +9,7 @@ import { TraceEventType, TraceNameMap } from '@/const/trace';
 import { isServerMode } from '@/const/version';
 import { knowledgeBaseQAPrompts } from '@/prompts/knowledgeBaseQA';
 import { chatService } from '@/services/chat';
+import { ClientCreditsService } from '@/services/credits/client';
 import { messageService } from '@/services/message';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
@@ -147,6 +148,7 @@ export const generateAIChat: StateCreator<
   sendMessage: async ({ message, files, onlyAddUserMessage, isWelcomeQuestion }) => {
     const { internal_coreProcessMessage, activeTopicId, activeId, activeThreadId } = get();
     if (!activeId) return;
+
 
     const fileIdList = files?.map((f) => f.id);
 
@@ -632,14 +634,31 @@ export const generateAIChat: StateCreator<
           isFunctionCall = true;
         }
 
+
         // update the content after fetch result
         await internal_updateMessageContent(messageId, content, {
           toolCalls: parsedToolCalls,
           reasoning: !!reasoning ? { ...reasoning, duration } : undefined,
           search: !!grounding?.citations ? grounding : undefined,
           imageList: finalImages.length > 0 ? finalImages : undefined,
-          metadata: speed ? { ...usage, ...speed } : usage,
+          metadata: speed ? { ...usage, ...speed } : { ...usage },
         });
+
+        // Deduct credits based on token usage (only in client mode)
+        if (!isServerMode && usage?.totalTokens) {
+          try {
+            const creditsService = new ClientCreditsService();
+            await creditsService.deductCredits(usage.totalTokens * 0.01, {
+              description: `${model} usage: ${usage.totalTokens} tokens`,
+              messageId,
+              modelName: model,
+              tokensUsed: usage.totalTokens,
+            });
+          } catch (error) {
+            console.warn('Failed to deduct credits:', error);
+            // Don't fail the message generation if credit deduction fails
+          }
+        }
       },
       onMessageHandle: async (chunk) => {
         switch (chunk.type) {

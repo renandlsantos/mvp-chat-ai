@@ -1,11 +1,14 @@
 import { Suspense } from 'react';
+import { App } from 'antd';
 
 import Loading from '@/components/Loading/BrandTextLoading';
 
-import AuthSignInBox from './AuthSignInBox';
+import CredentialsSignInClient from './CredentialsSignInClient';
 
 export default () => (
-  <Suspense fallback={<Loading />}>
-    <AuthSignInBox />
-  </Suspense>
+  <App>
+    <Suspense fallback={<Loading />}>
+      <CredentialsSignInClient />
+    </Suspense>
+  </App>
 );

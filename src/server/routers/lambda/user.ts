@@ -114,7 +114,6 @@ export const userRouter = router({
 
       // 有消息，或者创建过助手，则认为有 conversation
       hasConversation: hasAnyMessages || hasExtraSession,
-      // always return true for community version
       isOnboard: state.isOnboarded || true,
       lastName: state.lastName,
       preference: state.preference as UserPreference,

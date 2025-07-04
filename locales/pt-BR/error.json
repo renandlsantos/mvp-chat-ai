@@ -86,7 +86,7 @@
     "ExceededContextWindow": "O conteúdo da solicitação atual excede o comprimento que o modelo pode processar. Por favor, reduza a quantidade de conteúdo e tente novamente.",
     "FreePlanLimit": "Atualmente, você é um usuário gratuito e não pode usar essa função. Por favor, faça upgrade para um plano pago para continuar usando.",
     "InsufficientQuota": "Desculpe, a cota dessa chave atingiu o limite. Verifique se o saldo da conta é suficiente ou aumente a cota da chave e tente novamente.",
-    "InvalidAccessCode": "Senha de acesso inválida ou em branco. Por favor, insira a senha de acesso correta ou adicione uma Chave de API personalizada.",
+    "InvalidAccessCode": "Senha de acesso inválida. Por favor, insira a senha de acesso correta.",
     "InvalidBedrockCredentials": "Credenciais Bedrock inválidas, por favor, verifique AccessKeyId/SecretAccessKey e tente novamente",
     "InvalidClerkUser": "Desculpe, você ainda não fez login. Por favor, faça login ou registre uma conta antes de continuar.",
     "InvalidGithubToken": "O Token de Acesso Pessoal do Github está incorreto ou vazio. Por favor, verifique o Token de Acesso Pessoal do Github e tente novamente.",
@@ -141,9 +141,9 @@
       "welcome": "Bem-vindo!"
     },
     "password": {
-      "description": "O administrador ativou a criptografia do aplicativo. Insira a senha do aplicativo para desbloqueá-lo. A senha só precisa ser inserida uma vez.",
+      "description": "Por favor, insira a senha de acesso para continuar",
       "placeholder": "Insira a senha",
-      "title": "Insira a senha para desbloquear o aplicativo"
+      "title": "Acesso Restrito"
     },
     "tabs": {
       "apiKey": "Chave de API personalizada",
