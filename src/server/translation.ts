@@ -15,7 +15,7 @@ export const translation = async (ns: NS = 'common', hl: string) => {
   let i18ns = {};
   const lng = await getLocale(hl);
   try {
-    if (isDev && lng === 'zh-CN') i18ns = await import(`@/locales/default/${ns}`);
+    // Always load from the JSON files
     i18ns = await import(`@/../locales/${normalizeLocale(lng)}/${ns}.json`);
   } catch (e) {
     console.error('Error while reading translation file', e);

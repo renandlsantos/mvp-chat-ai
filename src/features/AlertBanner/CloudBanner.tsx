@@ -57,12 +57,12 @@ const CloudBanner = memo<{ mobile?: boolean }>(({ mobile }) => {
 
   const content = (
     <Flexbox align={'center'} flex={'none'} gap={8} horizontal ref={contentRef}>
-      <b>{t('alert.cloud.title', { name: LOBE_CHAT_CLOUD })}:</b>
+      <b>Sistema de Créditos Agents SAAS:</b>
       <span>
-        {t(mobile ? 'alert.cloud.descOnMobile' : 'alert.cloud.desc', {
-          credit: new Intl.NumberFormat('en-US').format(500_000),
-          name: LOBE_CHAT_CLOUD,
-        })}
+        {mobile 
+          ? 'Ganhe 500 créditos gratuitos todo mês para usar com nossos modelos de IA!' 
+          : 'Todos os usuários recebem 500 créditos gratuitos por mês. Use com GPT, Claude, Gemini e outros modelos de IA. Faça upgrade para mais créditos!'
+        }
       </span>
     </Flexbox>
   );
@@ -78,11 +78,9 @@ const CloudBanner = memo<{ mobile?: boolean }>(({ mobile }) => {
       <div className={styles.background} />
       <Center className={styles.wrapper} gap={16} horizontal width={'100%'}>
         {isTruncated ? <Marquee pauseOnHover>{content}</Marquee> : content}
-        <Link href={`${OFFICIAL_URL}?utm_source=${UTM_SOURCE}&utm_medium=banner`} target={'_blank'}>
-          <Button size={'small'} type="primary">
-            {t('alert.cloud.action')} <Icon icon={ArrowRightIcon} />
-          </Button>
-        </Link>
+        <Button size={'small'} type="primary">
+          Ver Planos <Icon icon={ArrowRightIcon} />
+        </Button>
       </Center>
     </Center>
   );

@@ -373,8 +373,10 @@
       "actionLink__use_username": "Usar nome de usuário",
       "actionText": "Não tem uma conta?",
       "subtitle": "Bem-vindo de volta! Por favor, faça login para continuar",
-      "title": "Faça login em {{applicationName}}"
+      "title": "Faça login no {{applicationName}}"
     },
+    "noAccount": "Não tem uma conta?",
+    "createAccount": "Cadastre-se",
     "totpMfa": {
       "formTitle": "Código de verificação",
       "subtitle": "Para continuar, por favor insira o código de verificação gerado pelo seu aplicativo autenticador",

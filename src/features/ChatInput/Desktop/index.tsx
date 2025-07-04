@@ -1,9 +1,9 @@
 'use client';
 
-import { DraggablePanel } from '@lobehub/ui';
 import { ReactNode, memo, useCallback, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import DraggablePanelContainer from '@/components/DraggablePanelContainer';
 import { CHAT_TEXTAREA_HEIGHT, CHAT_TEXTAREA_MAX_HEIGHT } from '@/const/layoutTokens';
 
 import { ActionKeys } from '../ActionBar/config';
@@ -41,7 +41,7 @@ const DesktopChatInput = memo<DesktopChatInputProps>(
     return (
       <>
         {!expand && leftActions.includes('fileUpload') && <LocalFiles />}
-        <DraggablePanel
+        <DraggablePanelContainer
           fullscreen={expand}
           maxHeight={CHAT_TEXTAREA_MAX_HEIGHT}
           minHeight={CHAT_TEXTAREA_HEIGHT}
@@ -72,7 +72,7 @@ const DesktopChatInput = memo<DesktopChatInputProps>(
             {renderTextArea(onSend)}
             {renderFooter({ expand, onExpandChange: setExpand })}
           </Flexbox>
-        </DraggablePanel>
+        </DraggablePanelContainer>
       </>
     );
   },

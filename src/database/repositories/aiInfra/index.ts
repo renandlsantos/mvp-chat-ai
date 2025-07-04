@@ -2,6 +2,7 @@ import { isEmpty } from 'lodash-es';
 import pMap from 'p-map';
 
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
+import { getEnabledProviders } from '@/config/modelProviders/env';
 import { AiModelModel } from '@/database/models/aiModel';
 import { AiProviderModel } from '@/database/models/aiProvider';
 import { LobeChatDatabase } from '@/database/type';
@@ -47,10 +48,13 @@ export class AiInfraRepos {
   getAiProviderList = async () => {
     const userProviders = await this.aiProviderModel.getAiProviderList();
 
-    // 1. 先创建一个基于 DEFAULT_MODEL_PROVIDER_LIST id 顺序的映射
-    const orderMap = new Map(DEFAULT_MODEL_PROVIDER_LIST.map((item, index) => [item.id, index]));
+    // Use only providers that have API keys configured
+    const enabledProvidersList = getEnabledProviders();
+    
+    // 1. 先创建一个基于 enabledProvidersList id 顺序的映射
+    const orderMap = new Map(enabledProvidersList.map((item, index) => [item.id, index]));
 
-    const builtinProviders = DEFAULT_MODEL_PROVIDER_LIST.map((item) => ({
+    const builtinProviders = enabledProvidersList.map((item) => ({
       description: item.description,
       enabled:
         userProviders.some((provider) => provider.id === item.id && provider.enabled) ||
@@ -60,7 +64,12 @@ export class AiInfraRepos {
       source: 'builtin',
     })) as AiProviderListItem[];
 
-    const mergedProviders = mergeArrayById(builtinProviders, userProviders);
+    // Filter userProviders to only include enabled ones
+    const filteredUserProviders = userProviders.filter(provider => 
+      enabledProvidersList.some(enabled => enabled.id === provider.id)
+    );
+
+    const mergedProviders = mergeArrayById(builtinProviders, filteredUserProviders);
 
     // 3. 根据 orderMap 排序
     return mergedProviders.sort((a, b) => {

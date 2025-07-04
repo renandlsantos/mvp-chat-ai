@@ -1,10 +1,11 @@
-import { Button, Dropdown, Hotkey, Icon } from '@lobehub/ui';
+import { Button, Dropdown, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { BotMessageSquare, LucideCheck, LucideChevronDown, MessageSquarePlus } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { Hotkey } from '@lobehub/ui';
 import { useSendMessage } from '@/features/ChatInput/useSend';
 import { useChatStore } from '@/store/chat';
 import { useUserStore } from '@/store/user';

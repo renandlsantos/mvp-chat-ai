@@ -50,10 +50,13 @@ export class DiscoverService {
   };
 
   getAssistantList = async (locale: Locales): Promise<DiscoverAssistantItem[]> => {
-    const json = await this.assistantStore.getAgentIndex(locale, revalidate);
-
-    // @ts-expect-error 目前类型不一致，未来要统一
-    return json.agents ?? [];
+    // For now, return empty list to avoid database access in edge runtime
+    // TODO: Implement admin-only assistants when database is properly configured
+    return [];
+    
+    // Only return admin-created assistants
+    // const json = await this.assistantStore.getAdminAgentsIndex(locale, revalidate);
+    // return json.agents ?? [];
   };
 
   getAssistantById = async (

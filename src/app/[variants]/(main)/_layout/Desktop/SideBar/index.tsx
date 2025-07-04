@@ -5,6 +5,7 @@ import { useTheme } from 'antd-style';
 import { parseAsBoolean, useQueryState } from 'nuqs';
 import { Suspense, memo } from 'react';
 
+import { ProductLogo } from '@/components/Branding';
 import { isDesktop } from '@/const/version';
 import { useActiveTabKey } from '@/hooks/useActiveTabKey';
 import { useGlobalStore } from '@/store/global';
@@ -32,17 +33,14 @@ const Nav = memo(() => {
   return (
     !inZenMode && (
       <SideNav
-        avatar={
-          <div className={electronStylish.nodrag}>
-            <Avatar />
-          </div>
-        }
+        avatar={<Avatar />}
         bottomActions={
           <div className={electronStylish.nodrag}>
             <BottomActions />
           </div>
         }
         className={electronStylish.draggable}
+        logo={<ProductLogo size={36} type={'text'} />}
         style={{
           height: '100%',
           zIndex: 100,

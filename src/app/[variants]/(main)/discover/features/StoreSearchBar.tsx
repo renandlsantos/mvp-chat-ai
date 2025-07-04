@@ -1,6 +1,6 @@
 'use client';
 
-import { SearchBar, SearchBarProps } from '@lobehub/ui';
+import { SearchBarProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { usePathname } from 'next/navigation';
 import { useQueryState } from 'nuqs';
@@ -8,6 +8,7 @@ import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import urlJoin from 'url-join';
 
+import SafeSearchBar from '@/components/SafeSearchBar';
 import { withSuspense } from '@/components/withSuspense';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { useUserStore } from '@/store/user';
@@ -34,6 +35,7 @@ interface StoreSearchBarProps extends SearchBarProps {
 
 const StoreSearchBar = memo<StoreSearchBarProps>(({ mobile, onBlur, onFocus, ...rest }) => {
   const [active, setActive] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const { activeKey } = useNav();
   const [searchKey, setSearchKey] = useQueryState('q', { clearOnDefault: true, defaultValue: '' });
@@ -46,6 +48,10 @@ const StoreSearchBar = memo<StoreSearchBarProps>(({ mobile, onBlur, onFocus, ...
   const activeType = activeKey === DiscoverTab.Home ? DiscoverTab.Assistants : activeKey;
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
     if (!pathname.includes('/discover/search')) return;
     // 使用 useQueryState 时，当 handleSearch 为空时无法回跳
     if (!searchKey) router.push(urlJoin('/discover', activeType), { query: {}, replace: true });
@@ -55,19 +61,46 @@ const StoreSearchBar = memo<StoreSearchBarProps>(({ mobile, onBlur, onFocus, ...
     router.push('/discover/search', { query: { q: value, type: activeType } });
   };
 
+  if (!mounted) {
+    return (
+      <SafeSearchBar
+        allowClear
+        autoFocus={mobile || active}
+        className={cx(styles.bar, active && styles.active)}
+        defaultValue={searchKey ? String(searchKey) : ''}
+        onBlur={(e) => {
+          setActive(false);
+          onBlur?.(e);
+        }}
+        onChange={(e) => setSearchKey(e.target.value)}
+        onFocus={(e) => {
+          setActive(true);
+          onFocus?.(e);
+        }}
+        onSearch={handleSearch}
+        placeholder={t('search.placeholder')}
+        style={{ width: mobile || active ? '100%' : 'min(480px,100%)' }}
+        styles={{ input: { width: '100%' } }}
+        value={searchKey ? String(searchKey) : ''}
+        variant={'filled'}
+        {...rest}
+      />
+    );
+  }
+
   return (
-    <SearchBar
+    <SafeSearchBar
       allowClear
       autoFocus={mobile || active}
       className={cx(styles.bar, active && styles.active)}
       defaultValue={searchKey ? String(searchKey) : ''}
       enableShortKey={!mobile}
-      onBlur={(e) => {
+      onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
         setActive(false);
         onBlur?.(e);
       }}
-      onChange={(e) => setSearchKey(e.target.value)}
-      onFocus={(e) => {
+      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchKey(e.target.value)}
+      onFocus={(e: React.FocusEvent<HTMLInputElement>) => {
         setActive(true);
         onFocus?.(e);
       }}

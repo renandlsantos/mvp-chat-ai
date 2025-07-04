@@ -35,10 +35,10 @@ describe('AssistantStore', () => {
     expect(url).toBe('https://registry.npmmirror.com/@lobehub/agents-index/v1/files/public');
   });
 
-  it('should return the zh-CN URL for zh locale', () => {
+  it('should return the pt-BR URL for pt locale', () => {
     const agentMarket = new AssistantStore();
-    const url = agentMarket['getAgentIndexUrl']('zh' as any);
-    expect(url).toBe(`${baseURL}/index.zh-CN.json`);
+    const url = agentMarket['getAgentIndexUrl']('pt' as any);
+    expect(url).toBe(`${baseURL}/index.pt-BR.json`);
   });
 
   it('should return the default URL for en locale', () => {
@@ -61,8 +61,8 @@ describe('AssistantStore', () => {
 
   it('should return the agent URL for a supported language', () => {
     const agentMarket = new AssistantStore();
-    const url = agentMarket.getAgentUrl('agent-123', 'zh-CN');
-    expect(url).toBe(`${baseURL}/agent-123.zh-CN.json`);
+    const url = agentMarket.getAgentUrl('agent-123', 'pt-BR');
+    expect(url).toBe(`${baseURL}/agent-123.pt-BR.json`);
   });
 
   it('should return the agent URL without language suffix if the provided language is not supported', () => {
@@ -175,7 +175,7 @@ describe('AssistantStore', () => {
     EdgeConfig.isEnabled.mockReturnValue(false);
 
     const store = new AssistantStore();
-    const result = await store.getAgentIndex('zh-CN');
+    const result = await store.getAgentIndex('pt-BR');
     expect(result).toEqual(mockAgents);
     expect(fetchMock).toHaveBeenCalledTimes(2);
   });

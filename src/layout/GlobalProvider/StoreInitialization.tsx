@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createStoreUpdater } from 'zustand-utils';
@@ -22,6 +22,11 @@ const StoreInitialization = memo(() => {
   useTranslation('error');
 
   const router = useRouter();
+  const pathname = usePathname();
+  
+  // Check if we're on an auth page
+  const isAuthPage = pathname?.includes('/signin') || pathname?.includes('/signup') || pathname?.includes('/error');
+  
   const [isLogin, isSignedIn, useInitUserState] = useUserStore((s) => [
     authSelectors.isLogin(s),
     s.isSignedIn,
@@ -55,14 +60,17 @@ const StoreInitialization = memo(() => {
   const isDBInited = useGlobalStore(systemStatusSelectors.isDBInited);
   const isLoginOnInit = isDBInited && (enableNextAuth ? isSignedIn : isLogin);
 
+  // Don't fetch user data on auth pages
+  const shouldFetchUserData = isLoginOnInit && !isAuthPage;
+
   // init inbox agent and default agent config
-  useInitAgentStore(isLoginOnInit, serverConfig.defaultAgent?.config);
+  useInitAgentStore(shouldFetchUserData, serverConfig.defaultAgent?.config);
 
   // init user provider key vaults
-  useInitAiProviderKeyVaults(isLoginOnInit);
+  useInitAiProviderKeyVaults(shouldFetchUserData);
 
   // init user state
-  useInitUserState(isLoginOnInit, serverConfig, {
+  useInitUserState(shouldFetchUserData, serverConfig, {
     onSuccess: (state) => {
       if (state.isOnboard === false) {
         router.push('/onboard');

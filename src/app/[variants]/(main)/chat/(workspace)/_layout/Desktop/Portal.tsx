@@ -1,11 +1,12 @@
 'use client';
 
-import { DraggablePanel, DraggablePanelContainer, type DraggablePanelProps } from '@lobehub/ui';
+import { DraggablePanelContainer, type DraggablePanelProps } from '@lobehub/ui';
 import { createStyles, useResponsive } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { PropsWithChildren, memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import DraggablePanelWrapper from '@/components/DraggablePanelContainer';
 import {
   CHAT_PORTAL_MAX_WIDTH,
   CHAT_PORTAL_TOOL_UI_WIDTH,
@@ -64,7 +65,7 @@ const PortalPanel = memo(({ children }: PropsWithChildren) => {
   };
 
   return (
-    <DraggablePanel
+    <DraggablePanelWrapper
       className={styles.drawer}
       classNames={{
         content: styles.content,
@@ -95,7 +96,7 @@ const PortalPanel = memo(({ children }: PropsWithChildren) => {
       >
         <Flexbox className={styles.panel}>{children}</Flexbox>
       </DraggablePanelContainer>
-    </DraggablePanel>
+    </DraggablePanelWrapper>
   );
 });
 

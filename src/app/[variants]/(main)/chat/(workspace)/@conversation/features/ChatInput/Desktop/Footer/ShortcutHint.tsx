@@ -1,9 +1,10 @@
-import { Hotkey, combineKeys } from '@lobehub/ui';
+import { combineKeys } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { Hotkey } from '@lobehub/ui';
 import { useUserStore } from '@/store/user';
 import { preferenceSelectors } from '@/store/user/selectors';
 import { KeyEnum } from '@/types/hotkey';

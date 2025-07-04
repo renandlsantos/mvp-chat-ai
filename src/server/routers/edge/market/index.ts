@@ -44,14 +44,22 @@ export const marketRouter = router({
       z
         .object({
           locale: z.string().optional(),
+          adminOnly: z.boolean().optional().default(false),
         })
         .optional(),
     )
     .query(async ({ input }): Promise<AgentStoreIndex> => {
       const locale = input?.locale;
+      const adminOnly = input?.adminOnly || false;
 
       const market = new AssistantStore();
       try {
+        // If adminOnly is true, return only admin-created agents
+        if (adminOnly) {
+          return await market.getAdminAgentsIndex(locale as Locales);
+        }
+        
+        // Otherwise, return all marketplace agents
         return await market.getAgentIndex(locale as Locales);
       } catch (e) {
         // it means failed to fetch

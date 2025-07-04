@@ -34,6 +34,7 @@ export const useStyles = createStyles(({ css, token }) => ({
 
 const SessionPanel = memo<PropsWithChildren>(({ children }) => {
   const { md = true } = useResponsive();
+  const [mounted, setMounted] = useState(false);
 
   const [isPinned] = useQueryState('pinned', parseAsBoolean);
 
@@ -47,6 +48,10 @@ const SessionPanel = memo<PropsWithChildren>(({ children }) => {
   const [cacheExpand, setCacheExpand] = useState<boolean>(Boolean(sessionExpandable));
   const [tmpWidth, setWidth] = useState(sessionsWidth);
   if (tmpWidth !== sessionsWidth) setWidth(sessionsWidth);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleExpand = (expand: boolean) => {
     if (isEqual(expand, sessionExpandable)) return;
@@ -68,6 +73,15 @@ const SessionPanel = memo<PropsWithChildren>(({ children }) => {
     if (md && cacheExpand) updatePreference({ showSessionPanel: true });
     if (!md) updatePreference({ showSessionPanel: false });
   }, [md, cacheExpand]);
+
+  // Avoid hydration errors by not rendering DraggablePanel until client-side
+  if (!mounted) {
+    return (
+      <div style={{ width: sessionsWidth, height: '100%' }}>
+        {children}
+      </div>
+    );
+  }
 
   return (
     <DraggablePanel

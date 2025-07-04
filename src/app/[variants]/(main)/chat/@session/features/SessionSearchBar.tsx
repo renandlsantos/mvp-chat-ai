@@ -1,9 +1,9 @@
 'use client';
 
-import { SearchBar } from '@lobehub/ui';
-import { type ChangeEvent, memo, useCallback } from 'react';
+import { type ChangeEvent, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import SafeSearchBar from '@/components/SafeSearchBar';
 import { useSessionStore } from '@/store/session';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
@@ -11,8 +11,12 @@ import { HotkeyEnum } from '@/types/hotkey';
 
 const SessionSearchBar = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('chat');
+  const [mounted, setMounted] = useState(false);
   const isLoaded = useUserStore((s) => s.isLoaded);
-  const hotkey = useUserStore(settingsSelectors.getHotkeyById(HotkeyEnum.Search));
+  
+  // Memoizar o seletor para evitar re-criações
+  const hotkeySelector = useMemo(() => settingsSelectors.getHotkeyById(HotkeyEnum.Search), []);
+  const hotkey = useUserStore(hotkeySelector);
 
   const [keywords, useSearchSessions, updateSearchKeywords] = useSessionStore((s) => [
     s.sessionSearchKeywords,
@@ -22,6 +26,10 @@ const SessionSearchBar = memo<{ mobile?: boolean }>(({ mobile }) => {
 
   const { isValidating } = useSearchSessions(keywords);
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       updateSearchKeywords(e.target.value);
@@ -30,18 +38,20 @@ const SessionSearchBar = memo<{ mobile?: boolean }>(({ mobile }) => {
   );
 
   return (
-    <SearchBar
+    <SafeSearchBar
       allowClear
-      enableShortKey={!mobile}
-      loading={!isLoaded || isValidating}
+      enableShortKey={mounted && !mobile}
+      loading={mounted && (!isLoaded || isValidating)}
       onChange={handleChange}
       placeholder={t('searchAgentPlaceholder')}
-      shortKey={hotkey}
-      spotlight={!mobile}
+      shortKey={mounted ? hotkey : undefined}
+      spotlight={mounted && !mobile}
       value={keywords}
       variant={'filled'}
     />
   );
 });
+
+SessionSearchBar.displayName = 'SessionSearchBar';
 
 export default SessionSearchBar;

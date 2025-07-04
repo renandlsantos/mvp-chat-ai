@@ -1,12 +1,13 @@
 'use client';
 
-import { Tabs } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { usePathname } from 'next/navigation';
 import { rgba } from 'polished';
 import { memo, useState } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
+
+import SafeTabs from '@/components/SafeTabs';
 
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { DiscoverTab } from '@/types/discover';
@@ -66,7 +67,7 @@ const Nav = memo(() => {
         }}
       >
         <Flexbox align={'center'} gap={4} horizontal>
-          <Tabs
+          <SafeTabs
             activeKey={activeKey}
             compact
             items={items as any}
