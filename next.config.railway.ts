@@ -1,37 +1,51 @@
 import type { NextConfig } from 'next';
 
-const isProd = process.env.NODE_ENV === 'production';
-
 const nextConfig: NextConfig = {
   output: 'standalone',
-  compress: isProd,
-  swcMinify: false, // Desabilitar minificação SWC para economizar memória
+  compress: false, // Desabilitar compressão para economizar CPU/memória
+  swcMinify: false,
   experimental: {
     serverMinification: false,
-    optimizePackageImports: [], // Desabilitar otimização de imports
+    optimizePackageImports: [],
+    webpackBuildWorker: false, // Desabilitar workers do webpack
   },
+  transpilePackages: [], // Não transpilar pacotes extras
   webpack: (config) => {
-    // Desabilitar cache do webpack para economizar memória
+    // Configurações mínimas do webpack
+    config.optimization = {
+      ...config.optimization,
+      minimize: false, // Desabilitar minimização
+      splitChunks: false, // Desabilitar split chunks
+      runtimeChunk: false,
+    };
+    
+    // Desabilitar cache
     config.cache = false;
     
     // Reduzir paralelismo
     config.parallelism = 1;
     
-    // Desabilitar source maps em produção
-    if (isProd) {
-      config.devtool = false;
-    }
+    // Sem source maps
+    config.devtool = false;
+    
+    // Desabilitar plugins pesados
+    config.plugins = config.plugins.filter((plugin) => {
+      const pluginName = plugin.constructor.name;
+      // Manter apenas plugins essenciais
+      return !pluginName.includes('Telemetry') && 
+             !pluginName.includes('BuildManifest') &&
+             !pluginName.includes('FontStylesheet');
+    });
     
     return config;
   },
   images: {
-    minimumCacheTTL: 60,
-    deviceSizes: [640, 768, 1024, 1280, 1600],
-    imageSizes: [16, 32, 48, 64, 96],
+    unoptimized: true, // Desabilitar otimização de imagens
   },
-  // Desabilitar features desnecessárias durante o build
   reactStrictMode: false,
   poweredByHeader: false,
+  generateEtags: false,
+  productionBrowserSourceMaps: false,
 };
 
 export default nextConfig;

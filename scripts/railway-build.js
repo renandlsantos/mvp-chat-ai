@@ -15,9 +15,7 @@ try {
   console.log('⚙️ Aplicando configuração otimizada...');
   fs.renameSync('next.config.railway.ts', 'next.config.ts');
 
-  // Limpar cache
-  console.log('🧹 Limpando cache...');
-  execSync('rm -rf .next', { stdio: 'inherit' });
+  // Não limpar cache pois está montado como volume no Railway
 
   // Executar build
   console.log('🔨 Executando build...');
