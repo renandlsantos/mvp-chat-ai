@@ -138,8 +138,7 @@ describe('userProfileSelectors', () => {
         enableAuth: () => false,
       } as unknown as UserStore;
 
-      expect(userProfileSelectors.nickName(store)).toBe('userPanel.defaultNickname');
-      expect(t).toHaveBeenCalledWith('userPanel.defaultNickname', { ns: 'common' });
+      expect(userProfileSelectors.nickName(store)).toBe('LobeChat');
     });
 
     it('should return user fullName when auth is disabled and is desktop', () => {

@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
+import UserCreditsDisplay from '@/features/UserCredits';
 
 const ICON_SIZE: ActionIconProps['size'] = {
   blockSize: 36,
@@ -26,6 +27,7 @@ const BottomActions = memo(() => {
 
   return (
     <Flexbox gap={8}>
+      <UserCreditsDisplay />
       {!hideDocs && (
         <Link aria-label={documentLabel} href={'./docs'}>
           <ActionIcon

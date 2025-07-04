@@ -1,2 +1,3 @@
 -- Custom SQL migration file, put you code below! --
-CREATE EXTENSION IF NOT EXISTS vector;
+-- CREATE EXTENSION IF NOT EXISTS vector;
+-- Commented out: pgvector extension not available on this server

@@ -57,7 +57,7 @@ const CloudBanner = memo<{ mobile?: boolean }>(({ mobile }) => {
 
   const content = (
     <Flexbox align={'center'} flex={'none'} gap={8} horizontal ref={contentRef}>
-      <b>Sistema de Créditos AI Hub:</b>
+      <b>Sistema de Créditos Agents SAAS:</b>
       <span>
         {mobile 
           ? 'Ganhe 500 créditos gratuitos todo mês para usar com nossos modelos de IA!' 

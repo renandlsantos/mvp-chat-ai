@@ -1,7 +1,7 @@
 {
-  "name": "@lobehub/chat",
+  "name": "@agentssaas/chat",
   "version": "1.96.9",
-  "description": "AI Hub - an open-source, high-performance chatbot framework that supports speech synthesis, multimodal, and extensible Function Call plugin system. Supports one-click free deployment of your private ChatGPT/LLM web application.",
+  "description": "Agents SAAS - an open-source, high-performance chatbot framework that supports speech synthesis, multimodal, and extensible Function Call plugin system. Supports one-click free deployment of your private ChatGPT/LLM web application.",
   "keywords": [
     "framework",
     "chatbot",
@@ -14,16 +14,16 @@
     "tts",
     "stt"
   ],
-  "homepage": "https://github.com/lobehub/lobe-chat",
+  "homepage": "https://github.com/agentssaas/agents-saas",
   "bugs": {
-    "url": "https://github.com/lobehub/lobe-chat/issues/new/choose"
+    "url": "https://github.com/agentssaas/agents-saas/issues/new/choose"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/lobehub/lobe-chat.git"
+    "url": "https://github.com/agentssaas/agents-saas.git"
   },
   "license": "MIT",
-  "author": "LobeHub <i@lobehub.com>",
+  "author": "Agents SAAS <i@agentssaas.com>",
   "sideEffects": false,
   "workspaces": [
     "packages/*"
@@ -65,9 +65,9 @@
     "prettier": "prettier -c --write \"**/**\"",
     "pull": "git pull",
     "release": "semantic-release",
-    "self-hosting:docker": "docker build -t lobe-chat:local .",
-    "self-hosting:docker-cn": "docker build -t lobe-chat-local --build-arg USE_CN_MIRROR=true .",
-    "self-hosting:docker-cn@database": "docker build -t lobe-chat-database-local -f Dockerfile.database --build-arg USE_CN_MIRROR=true .",
+    "self-hosting:docker": "docker build -t agents-saas:local .",
+    "self-hosting:docker-cn": "docker build -t agents-saas-local --build-arg USE_CN_MIRROR=true .",
+    "self-hosting:docker-cn@database": "docker build -t agents-saas-database-local -f Dockerfile.database --build-arg USE_CN_MIRROR=true .",
     "start": "next start -p 3210",
     "stylelint": "stylelint \"src/**/*.{js,jsx,ts,tsx}\" --fix",
     "test": "npm run test-app && npm run test-server",
@@ -172,6 +172,7 @@
     "ai": "^3.4.33",
     "antd": "^5.25.4",
     "antd-style": "^3.7.1",
+    "bcryptjs": "^3.0.2",
     "brotli-wasm": "^3.0.1",
     "chroma-js": "^3.1.2",
     "countries-and-timezones": "^3.8.0",
