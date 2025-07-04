@@ -10,8 +10,7 @@ cmds = [
 
 [phases.build]
 cmds = [
-  "pnpm run prebuild",
-  "pnpm run build:railway-simple"
+  "pnpm run build"
 ]
 
 [start]
