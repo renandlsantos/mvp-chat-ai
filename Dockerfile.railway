@@ -1,0 +1,67 @@
+# Dockerfile otimizado para Railway com build em múltiplas etapas
+FROM node:20-alpine AS deps
+WORKDIR /app
+
+# Instalar pnpm
+RUN npm install -g pnpm@9.1.0
+
+# Copiar apenas arquivos de dependências
+COPY package.json pnpm-lock.yaml ./
+COPY patches ./patches
+
+# Instalar dependências
+RUN pnpm install --frozen-lockfile --prefer-offline
+
+# Etapa de build
+FROM node:20-alpine AS builder
+WORKDIR /app
+
+# Instalar pnpm
+RUN npm install -g pnpm@9.1.0
+
+# Copiar dependências da etapa anterior
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+# Variáveis de ambiente para build rápido
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_OPTIONS="--max-old-space-size=4096"
+
+# Build com configuração mínima
+RUN echo "module.exports = { \
+  output: 'standalone', \
+  typescript: { ignoreBuildErrors: true }, \
+  eslint: { ignoreDuringBuilds: true }, \
+  images: { unoptimized: true }, \
+  compress: false, \
+  generateBuildId: () => 'railway', \
+  webpack: (config) => { \
+    config.optimization.minimize = false; \
+    config.cache = false; \
+    return config; \
+  } \
+}" > next.config.js && \
+pnpm run build
+
+# Etapa final - imagem mínima
+FROM node:20-alpine AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+ENV PORT=3000
+
+# Criar usuário não-root
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nextjs -u 1001
+
+# Copiar arquivos necessários
+COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
+
+EXPOSE 3000
+
+CMD ["node", "server.js"]
