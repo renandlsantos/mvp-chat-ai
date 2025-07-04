@@ -13,6 +13,9 @@ import AuthProvider from '@/layout/AuthProvider';
 import GlobalProvider from '@/layout/GlobalProvider';
 import { Locales } from '@/locales/resources';
 import { DynamicLayoutProps } from '@/types/next';
+
+// Forçar renderização dinâmica no Railway
+export { dynamic, dynamicParams, revalidate, fetchCache, runtime, preferredRegion, generateStaticParams } from './layout.config';
 import { RouteVariants } from '@/utils/server/routeVariants';
 
 const inVercel = process.env.VERCEL === '1';

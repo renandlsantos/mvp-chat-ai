@@ -2,29 +2,70 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   output: 'standalone',
-  compress: false, // Desabilitar compressão para economizar CPU/memória
+  compress: false,
+  
   experimental: {
     serverMinification: false,
     optimizePackageImports: [],
-    webpackBuildWorker: false, // Desabilitar workers do webpack
+    webpackBuildWorker: false,
+    // Desabilitar features experimentais que consomem memória
+    instrumentationHook: false,
+    parallelServerCompiles: false,
+    parallelServerBuildTraces: false,
   },
-  transpilePackages: [], // Não transpilar pacotes extras
+  
+  // Ignorar erros para acelerar o build
   typescript: {
-    // Durante o build no Railway, ignorar erros de TypeScript
     ignoreBuildErrors: true,
   },
   eslint: {
-    // Durante o build, ignorar erros de ESLint
     ignoreDuringBuilds: true,
   },
-  // Desabilitar geração estática para evitar erros de Suspense
-  staticPageGenerationTimeout: 120,
-  // Configurar para gerar menos páginas estáticas
-  generateBuildId: async () => 'build',
-  // Desabilitar otimizações de fonte
+  
+  // Desabilitar completamente a geração estática
+  generateStaticParams: false,
+  dynamicParams: true,
+  
+  // Configurações para reduzir memória
+  staticPageGenerationTimeout: 10, // Reduzir timeout
+  generateBuildId: async () => 'railway-build',
   optimizeFonts: false,
+  
+  // Desabilitar recursos pesados
+  images: {
+    unoptimized: true,
+    disableStaticImages: true,
+  },
+  
+  // Headers vazios para evitar processamento
+  async headers() {
+    return [];
+  },
+  
+  // Redirects vazios para evitar processamento
+  async redirects() {
+    return [];
+  },
+  
+  // Rewrites vazios para evitar processamento
+  async rewrites() {
+    return {
+      beforeFiles: [],
+      afterFiles: [],
+      fallback: [],
+    };
+  },
+  
+  reactStrictMode: false,
+  poweredByHeader: false,
+  generateEtags: false,
+  productionBrowserSourceMaps: false,
+  
+  // Desabilitar todas as otimizações de bundle
+  swcMinify: false,
+  
   webpack: (config, { isServer }) => {
-    // Resolver o problema do módulo zipfile
+    // Resolver problemas de módulos
     if (!isServer) {
       config.resolve = {
         ...config.resolve,
@@ -34,56 +75,107 @@ const nextConfig: NextConfig = {
           fs: false,
           path: false,
           crypto: false,
+          stream: false,
+          util: false,
+          buffer: false,
+          http: false,
+          https: false,
+          os: false,
+          querystring: false,
+          zlib: false,
+          net: false,
+          tls: false,
+          child_process: false,
         },
       };
     }
     
-    // Ignorar módulos problemáticos apenas no servidor
+    // Ignorar módulos problemáticos no servidor
     if (isServer) {
       config.externals = [
         ...(Array.isArray(config.externals) ? config.externals : [config.externals]),
-        { zipfile: 'commonjs zipfile' }
+        { zipfile: 'commonjs zipfile' },
+        'canvas',
+        'jsdom',
+        '@napi-rs/canvas',
       ];
     }
     
-    // Configurações mínimas do webpack
+    // Desabilitar TODAS as otimizações
     config.optimization = {
-      ...config.optimization,
-      minimize: false, // Desabilitar minimização
-      splitChunks: false, // Desabilitar split chunks
+      minimize: false,
+      minimizer: [],
+      splitChunks: false,
       runtimeChunk: false,
-      moduleIds: 'deterministic',
+      moduleIds: 'named',
+      chunkIds: 'named',
+      nodeEnv: 'production',
+      usedExports: false,
+      sideEffects: false,
+      providedExports: false,
+      concatenateModules: false,
+      flagIncludedChunks: false,
       removeAvailableModules: false,
       removeEmptyChunks: false,
-      sideEffects: false,
+      mergeDuplicateChunks: false,
+      mangleExports: false,
+      mangleWasmImports: false,
+      realContentHash: false,
+      innerGraph: false,
     };
     
-    // Desabilitar cache
+    // Desabilitar cache completamente
     config.cache = false;
     
-    // Reduzir paralelismo
+    // Configurações mínimas de performance
+    config.performance = {
+      hints: false,
+    };
+    
+    // Reduzir paralelismo ao mínimo
     config.parallelism = 1;
     
     // Sem source maps
     config.devtool = false;
     
-    // Desabilitar plugins pesados mas manter os essenciais
+    // Desabilitar todos os plugins não essenciais
     config.plugins = config.plugins.filter((plugin) => {
       const pluginName = plugin.constructor.name;
-      // Remover apenas plugins não essenciais
-      return !pluginName.includes('Telemetry') && 
-             !pluginName.includes('FontStylesheet');
+      const essentialPlugins = [
+        'DefinePlugin',
+        'BuildManifestPlugin',
+        'ReactFreshWebpackPlugin',
+        'NextJsRequireCacheHotReloader',
+      ];
+      return essentialPlugins.some(name => pluginName.includes(name));
     });
+    
+    // Configurações adicionais para reduzir memória
+    if (config.module?.rules) {
+      config.module.rules.forEach((rule: any) => {
+        if (rule.oneOf) {
+          rule.oneOf.forEach((oneOf: any) => {
+            if (oneOf.use?.loader?.includes('babel-loader')) {
+              oneOf.use.options = {
+                ...oneOf.use.options,
+                cacheDirectory: false,
+                cacheCompression: false,
+              };
+            }
+          });
+        }
+      });
+    }
     
     return config;
   },
-  images: {
-    unoptimized: true, // Desabilitar otimização de imagens
-  },
-  reactStrictMode: false,
-  poweredByHeader: false,
-  generateEtags: false,
-  productionBrowserSourceMaps: false,
+  
+  // Desabilitar transpilação de pacotes
+  transpilePackages: [],
+  
+  // Configuração mínima do servidor
+  serverRuntimeConfig: {},
+  publicRuntimeConfig: {},
 };
 
 export default nextConfig;

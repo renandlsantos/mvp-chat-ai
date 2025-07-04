@@ -32,6 +32,7 @@
     "prebuild": "tsx scripts/prebuild.mts",
     "build": "next build",
     "build:railway": "node scripts/railway-build.js",
+    "build:railway-safe": "node scripts/railway-build-safe.js",
     "postbuild": "npm run build-sitemap && npm run build-migrate-db",
     "build-migrate-db": "bun run db:migrate",
     "build-sitemap": "tsx ./scripts/buildSitemapIndex/index.ts",
