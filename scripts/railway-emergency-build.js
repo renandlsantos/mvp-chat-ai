@@ -8,7 +8,7 @@ console.log('🆘 Railway EMERGENCY Build v4.0 - Ultra Minimal');
 console.log('💾 Memory:', Math.round(require('os').totalmem() / 1024 / 1024), 'MB');
 
 // Emergency memory settings
-process.env.NODE_OPTIONS = '--max-old-space-size=50176 --optimize-for-size';
+process.env.NODE_OPTIONS = '--max-old-space-size=50176';
 process.env.NEXT_TELEMETRY_DISABLED = '1';
 process.env.DISABLE_SENTRY = 'true';
 process.env.ANALYZE = 'false';
