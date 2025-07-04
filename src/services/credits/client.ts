@@ -11,8 +11,8 @@ export class ClientCreditsService extends BaseClientService implements ICreditsS
 
   checkAndCreateUserCredits = async (planType: string = 'free'): Promise<UserCredits> => {
     return this._fetch('/api/credits/init', {
-      method: 'POST',
       body: JSON.stringify({ planType }),
+      method: 'POST',
     });
   };
 
@@ -26,8 +26,8 @@ export class ClientCreditsService extends BaseClientService implements ICreditsS
     }
   ): Promise<boolean> => {
     const response = await this._fetch('/api/credits/deduct', {
-      method: 'POST',
       body: JSON.stringify({ amount, ...details }),
+      method: 'POST',
     });
     return response.success;
   };
@@ -35,13 +35,13 @@ export class ClientCreditsService extends BaseClientService implements ICreditsS
   addCredits = async (
     amount: number,
     details: {
-      type: 'refill' | 'bonus' | 'subscription';
       description?: string;
+      type: 'refill' | 'bonus' | 'subscription';
     }
   ): Promise<void> => {
     await this._fetch('/api/credits/add', {
-      method: 'POST',
       body: JSON.stringify({ amount, ...details }),
+      method: 'POST',
     });
   };
 
@@ -53,8 +53,8 @@ export class ClientCreditsService extends BaseClientService implements ICreditsS
 
   updatePlan = async (planType: string): Promise<UserCredits> => {
     return this._fetch('/api/credits/plan', {
-      method: 'PUT',
       body: JSON.stringify({ planType }),
+      method: 'PUT',
     });
   };
 }

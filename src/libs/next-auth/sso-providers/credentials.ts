@@ -64,11 +64,9 @@ const credentialsProvider: SSOProvider = {
         const { serverDB } = await import('@/database/server');
         const { users } = await import('@/database/schemas');
         
+        const { eq } = await import('drizzle-orm');
         const user = await serverDB.query.users.findFirst({
-          where: (users, { or, eq }) => or(
-            eq(users.username, credentials.username),
-            eq(users.email, credentials.username)
-          ),
+          where: eq(users.username, credentials.username),
         });
 
         if (!user) {
@@ -83,7 +81,7 @@ const credentialsProvider: SSOProvider = {
           throw new Error('No password hash found');
         }
 
-        const isValidPassword = await bcrypt.compare(credentials.password, passwordHash);
+        const isValidPassword = await bcrypt.compare(credentials.password, String(passwordHash));
         
         if (!isValidPassword) {
           return null;
@@ -110,7 +108,7 @@ const credentialsProvider: SSOProvider = {
             return null;
           }
           
-          const isValidPassword = await bcrypt.compare(credentials.password, user.passwordHash);
+          const isValidPassword = await bcrypt.compare(credentials.password, String(user.passwordHash));
           
           if (!isValidPassword) {
             return null;

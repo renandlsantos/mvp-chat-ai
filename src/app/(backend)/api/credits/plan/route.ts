@@ -1,27 +1,40 @@
 import { NextRequest } from 'next/server';
 
-import { getServerConfig } from '@/config/server';
-import { getJWTPayload } from '@/libs/next-auth';
+import { getAppConfig } from '@/envs/app';
+import { getJWTPayload } from '@/utils/server/jwt';
 import { ServerCreditsService } from '@/services/credits/server';
 import { CREDIT_PLANS } from '@/services/credits';
-
-import { AuthError } from '../../error';
 
 export const runtime = 'nodejs';
 
 export const PUT = async (req: NextRequest) => {
-  const { ACCESS_CODE } = getServerConfig();
-
   try {
-    const payload = await getJWTPayload(req);
+    // Get token from authorization header
+    const authHeader = req.headers.get('authorization');
+    const token = authHeader?.replace('Bearer ', '');
+    
+    if (!token) {
+      return Response.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+    
+    const payload = await getJWTPayload(token);
 
     if (!payload) {
-      throw new AuthError(1, 'Unauthorized');
+      return Response.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
     }
 
     const userId = payload.userId || payload.id;
     if (!userId) {
-      throw new AuthError(1, 'User ID not found');
+      return Response.json(
+        { error: 'User ID not found' },
+        { status: 401 }
+      );
     }
 
     const { planType } = await req.json();
